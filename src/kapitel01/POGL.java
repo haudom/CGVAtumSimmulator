@@ -1,6 +1,5 @@
 package kapitel01;
 
-import kapitel01.particle_version12_focus_on_object.Weg2DDynamisch;
 import kapitel04.LineareAlgebra;
 import kapitel04.Vektor2D;
 import org.lwjgl.util.vector.Vector2f;

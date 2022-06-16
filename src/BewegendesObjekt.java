@@ -1,5 +1,4 @@
-
-
+import kapitel01.Weg2DDynamisch;
 import kapitel04.LineareAlgebra;
 import kapitel04.Vektor2D;
 

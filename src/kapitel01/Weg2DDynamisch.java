@@ -1,4 +1,4 @@
-package kapitel01.particle_version12_focus_on_object;
+package kapitel01;
 
 import kapitel04.Vektor2D;
 

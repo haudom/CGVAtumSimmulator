@@ -1,6 +1,7 @@
 
 
 import kapitel01.POGL;
+import kapitel01.Weg2DDynamisch;
 import kapitel04.Vektor2D;
 
 public class Agent extends BewegendesObjekt {
