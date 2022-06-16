@@ -19,6 +19,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import kapitel04.Vektor3D;
 import main.objekte.BasisObjekt;
+import main.objekte.Baum;
 import main.objekte.Blatt;
 import main.objekte.Laubgeblaese;
 import org.lwjgl.opengl.Display;
@@ -43,10 +44,11 @@ public class AutumnSimulator extends LWJGLBasisFenster {
     laubgeblaese = new Laubgeblaese(2000, 60, 0.5);
 
     // Render erst die Blätter
-    erzeugeBlaetter(50);
-
+    erzeugeBlaetter(10);
+    objekte.add(new Baum());
     // Render Laubgebläse zum Schluss
     objekte.add(laubgeblaese);
+
   }
 
   private void erzeugeBlaetter(int anz) {
