@@ -48,20 +48,26 @@ public class Wind implements Updatebar {
   }
 
   public void update(double time) {
+    // Erstelle einen zufälligen Vektor
     this.velocity = new Vektor3D(
         zufall.nextFloat() * (maxWind.x - minWind.x) + minWind.x,
         zufall.nextFloat() * (maxWind.y - minWind.y) + minWind.y,
         zufall.nextFloat() * (maxWind.z - minWind.z) + minWind.z
     );
 
-    // Bilde den Durchschnitt der vorherigen Windwerte in Zufallswert.
+    // Bilde den Durchschnitt der vorherigen Windwerte.
+    // Addiere alle vorherigen Windvektoren auf den Zufallsvektor drauf
     for (Vektor3D alterWind : alteWerte) {
       this.velocity.add(alterWind);
     }
     // Dividiere die Summe aller Werte mit Array-Länge + 1 (+1 wegen der Zufallswerte,
-    // die schon im zufallsWind-Vektor drin waren, bevor die alten Werte drauf addiert wurden).
+    // die schon im this.velocity-Vektor drin waren, bevor die alten Werte drauf addiert wurden).
     this.velocity.mult(1.0 / (alteWerte.length + 1));
 
-    alteWerte[alteWerteIndex++] = this.velocity;
+    // erhöhe den Schreib-Index
+    if (++alteWerteIndex >= this.alteWerte.length) {
+      alteWerteIndex = 0;
+    }
+    alteWerte[alteWerteIndex] = this.velocity;
   }
 }
