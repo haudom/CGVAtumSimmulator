@@ -55,7 +55,7 @@ public class Vektor3D {
 		z = vec.z;
 	}
 
-	public boolean isNullvector() {
+	public boolean isNullvektor() {
 		return (x == 0 && y == 0 && z == 0);
 	}
 
@@ -94,7 +94,7 @@ public class Vektor3D {
 	}
 
 	public void normalize() {
-		if (this.isNullvector())
+		if (this.isNullvektor())
 			setPosition(LineareAlgebra.mult(this, (1.0 / this.length() + 0.00001)));
 		else
 			setPosition(LineareAlgebra.div(this, this.length()));

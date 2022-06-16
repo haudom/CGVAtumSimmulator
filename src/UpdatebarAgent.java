@@ -3,11 +3,11 @@
 import kapitel04.LineareAlgebra;
 import kapitel04.Vektor2D;
 
-public class VerhaltenAgent implements Verhalten {
+public class UpdatebarAgent implements Updatebar {
 	private Agent agent;
 	private Steuerungsverhalten steering;
 
-	public VerhaltenAgent(Agent agent) {
+	public UpdatebarAgent(Agent agent) {
 		this.agent = agent;
 		this.steering = new Steuerungsverhalten();
 	}

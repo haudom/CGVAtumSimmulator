@@ -1,3 +1,3 @@
-public interface Verhalten {
+public interface Updatebar {
    public void update(double time);
 }

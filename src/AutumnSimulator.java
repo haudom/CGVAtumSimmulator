@@ -20,26 +20,45 @@ import org.lwjgl.opengl.Display;
 import kapitel04.Vektor2D;
 
 public class AutumnSimulator extends LWJGLBasisFenster {
-  private ObjektManager elemente;
+  private Wind wind;
+  private Laubgeblaese laubgeblaese;
+  private ObjektManager blaetter;
   private long last = System.nanoTime();
 
   public AutumnSimulator(String title, int width, int height) {
     super(title, width, height);
+
     initDisplay();
-    elemente = ObjektManager.getExemplar();
-    erzeugeAgenten(10);
+
+    wind = new Wind(10);
+    laubgeblaese = new Laubgeblaese();
+    blaetter = ObjektManager.getExemplar();
+
+    erzeugeBlaetter(100);
   }
 
-  private void erzeugeAgenten(int anz) {
+  private void erzeugeBlaetter(int anz) {
     Random rand = ThreadLocalRandom.current();
 
     for (int i = 0; i < anz; i++) {
-      Agent agent = new Agent(
+      blaetter.add(new Blatt(
+          laubgeblaese,
           new Vektor2D(rand.nextInt(WIDTH), rand.nextInt(HEIGHT)),
-          new Vektor2D(rand.nextFloat()*20, 0), 10, 1f, 1f, 1f);
-      agent.setVerhalten(new VerhaltenAgent(agent));
-      agent.setObjektManager(elemente);
-      elemente.registrierePartikel(agent);
+          new Vektor2D(rand.nextFloat()*20, 0)
+      ));
+    }
+  }
+
+  public void syncFPS() {
+    long now = System.nanoTime();
+    try {
+      Thread.sleep(Math.max(
+          1,
+          // rechne die aktuelle Frame-Differenz in ms aus und zieh sie vom 1000/60 ms Zeitbudget ab
+          (long) (1000 / 60) - (long) ((now - last) / 1e6)
+      ));
+    } catch (InterruptedException e) {
+      e.printStackTrace();
     }
   }
 
@@ -47,12 +66,10 @@ public class AutumnSimulator extends LWJGLBasisFenster {
   public void renderLoop() {
     glEnable(GL_DEPTH_TEST);
 
+    // Haupt-loop. Solange die UserIn das Fenster nicht schließen möchte, fahre mit der Game-loop
+    // fort.
     while (!Display.isCloseRequested()) {
-      try {
-        Thread.sleep(10);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
+      syncFPS();
 
       long now = System.nanoTime();
       double diff = (now - last) / 1e9;
@@ -67,11 +84,12 @@ public class AutumnSimulator extends LWJGLBasisFenster {
       glMatrixMode(GL_MODELVIEW);
       glDisable(GL_DEPTH_TEST);
 
-      for (int i = 1; i <= elemente.getAgentSize(); i++) {
-        BasisObjekt aktAgent = elemente.getAgent(i);
+      // Render erst die Blätter
+      for (int i = 0; i < blaetter.size(); i++) {
+        BasisObjekt blatt = blaetter.get(i);
 
-        aktAgent.render();
-        aktAgent.update(diff);
+        blatt.update(diff);
+        blatt.render();
       }
 
       Display.update();

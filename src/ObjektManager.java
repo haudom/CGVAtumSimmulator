@@ -18,23 +18,23 @@ public class ObjektManager {
       throw new CloneNotSupportedException("Clonen ist nicht erlaubt");
    }
    
-   public void registrierePartikel(BasisObjekt obj) {
+   public void add(BasisObjekt obj) {
       partikel.put(new Integer(obj.id), obj);
    }
 
-   public void entfernePartikel(BasisObjekt obj) {
+   public void remove(BasisObjekt obj) {
       partikel.remove(obj);
    }
    
-   public BasisObjekt getAgent(int objID) {
+   public BasisObjekt get(int objID) {
       return partikel.get(new Integer(objID));
    }
    
-   public HashMap<Integer, BasisObjekt> getPartikelMap() {
+   public HashMap<Integer, BasisObjekt> getMap() {
       return partikel;
    }
    
-   public int getAgentSize() {
+   public int size() {
       return partikel.size();
    }
 }

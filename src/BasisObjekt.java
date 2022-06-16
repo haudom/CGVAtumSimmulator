@@ -1,11 +1,10 @@
 import kapitel04.Vektor2D;
 
-public abstract class BasisObjekt {
+public abstract class BasisObjekt implements Updatebar {
    private static int objCounter = 0;
 
    public int id;
    public Vektor2D position;
-   public Verhalten verhalten = null;
    
    public BasisObjekt() {
       this(new Vektor2D(0,0));
@@ -26,12 +25,6 @@ public abstract class BasisObjekt {
 
    public abstract void render();
 
-   public void setVerhalten(Verhalten verhalten) {
-      this.verhalten = verhalten;
-   }
-
    public void update(double time) {
-      if (verhalten != null)
-         verhalten.update(time);
    }
 }

@@ -97,7 +97,7 @@ public class LineareAlgebra {
 	}
 
 	public static Vektor3D normalize(Vektor3D vec) {
-		return (vec.isNullvector()) ? new Vektor3D(mult(vec, (1.0 / vec.length() + 0.00001)))
+		return (vec.isNullvektor()) ? new Vektor3D(mult(vec, (1.0 / vec.length() + 0.00001)))
 				: new Vektor3D(div(vec, vec.length()));
 	}
 

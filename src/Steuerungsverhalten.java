@@ -51,11 +51,11 @@ public class Steuerungsverhalten {
 
 	public Vektor2D separation(Agent me, double dist) {
 		Vektor2D steeringForce = new Vektor2D(0, 0);
-		for (int i = 0; i < me.objektManager.getAgentSize(); i++) {
+		for (int i = 0; i < me.objektManager.size(); i++) {
 			if (me.id == i)
 				continue;
 
-			BasisObjekt bObj = me.objektManager.getAgent(i);
+			BasisObjekt bObj = me.objektManager.get(i);
 			if (bObj instanceof Agent) {
 				Agent bObjF = (Agent)bObj;
 				if (LineareAlgebra.euklDistanz(me.position, bObjF.position) < dist)
@@ -68,11 +68,11 @@ public class Steuerungsverhalten {
 
 	public Vektor2D alignment(Agent me, double dist) {
 		Vektor2D steeringForce = new Vektor2D(0, 0);
-		for (int i = 0; i < me.objektManager.getAgentSize(); i++) {
+		for (int i = 0; i < me.objektManager.size(); i++) {
 			if (me.id == i)
 				continue;
 
-			BasisObjekt bObj = me.objektManager.getAgent(i);
+			BasisObjekt bObj = me.objektManager.get(i);
 			if (bObj instanceof Agent) {
 				Agent bObjF = (Agent)bObj;
 				if (LineareAlgebra.euklDistanz(me.position, bObjF.position) < dist)
@@ -86,11 +86,11 @@ public class Steuerungsverhalten {
 
 	public Vektor2D cohesion(Agent me, double dist) {
 		Vektor2D steeringForce = new Vektor2D(0, 0);
-		for (int i = 0; i < me.objektManager.getAgentSize(); i++) {
+		for (int i = 0; i < me.objektManager.size(); i++) {
 			if (me.id == i)
 				continue;
 
-			BasisObjekt bObj = me.objektManager.getAgent(i);
+			BasisObjekt bObj = me.objektManager.get(i);
 			if (bObj instanceof Agent) {
 				Agent bObjF = (Agent)bObj;
 				if (LineareAlgebra.euklDistanz(me.position, bObjF.position) < dist)
