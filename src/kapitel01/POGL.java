@@ -34,12 +34,15 @@ public class POGL {
 		glEnd();
 	}
 
-	public static void renderViereck() {
+	public static void renderViereck(int width, int height) {
+		float halfWidth = width / 2;
+		float halfHeight = height / 2;
+
 		glBegin(GL_QUADS);
-		glVertex3f(-1, -1, 0);
-		glVertex3f(1, -1, 0);
-		glVertex3f(1, 1, 0);
-		glVertex3f(-1, 1, 0);
+		glVertex3f(-halfWidth, -halfHeight, 0);
+		glVertex3f(halfWidth, -halfHeight, 0);
+		glVertex3f(halfWidth, halfHeight, 0);
+		glVertex3f(-halfWidth, halfHeight, 0);
 		glEnd();
 	}
 
