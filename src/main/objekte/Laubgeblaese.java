@@ -17,15 +17,19 @@ public class Laubgeblaese extends BasisObjekt {
   public double windStaerke = 0;
   public double maxWindStaerke;
   public double windWinkel;
+  public double windKante;
 
   /**
    * Erstellt ein neues Laubgebläse als Objekt, mit Laubgebläse-Logik.
    * @param maxWindStaerke Setzt die maximale Stärke, die das Gebläse blasen kann.
    * @param windWinkel Setzt den Abstrahlwinkel, in dem Wind empfangen wird.
+   * @param windKante Setzt die Weiche der Kante, ab der laut windWinkel kein Wind mehr
+   *                  empfangen wird von 0.0 bis 1.0.
    */
-  public Laubgeblaese(double maxWindStaerke, double windWinkel) {
+  public Laubgeblaese(double maxWindStaerke, double windWinkel, double windKante) {
     this.maxWindStaerke = maxWindStaerke;
     this.windWinkel = windWinkel;
+    this.windKante = windKante;
   }
 
   public Vektor2D mousePosition() {
@@ -95,9 +99,14 @@ public class Laubgeblaese extends BasisObjekt {
       distanzVektor.sub(position);
 
       // Je näher der Bläser am Blatt, desto (quadratisch) höher die Kraft
-      double staerke = 1.0 - Math.sqrt(distanzVektor.length() / WIDTH);
+      double distanzStaerke = 1.0 - Math.sqrt(distanzVektor.length() / WIDTH);
 
-      velocity.mult(staerke);
+      // Reduziere die Kraft am Rand
+      double maxKante = halbWindWinkel;
+      double minKante = halbWindWinkel * windKante;
+      double randStaerke = Math.min(1.0, 1.0 - (Math.abs(schussbahnWinkel) - minKante) / (maxKante - minKante));
+
+      velocity.mult(distanzStaerke * randStaerke);
 
       return velocity;
     } else {
