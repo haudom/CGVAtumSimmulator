@@ -9,10 +9,10 @@ import kapitel01.POGL;
 import kapitel04.Vektor2D;
 import kapitel04.Vektor3D;
 import main.Wind;
+import main.utility.NumberUtil;
 import org.lwjgl.opengl.Display;
 
 import static org.lwjgl.opengl.GL11.*;
-
 
 public class Blatt extends BasisObjekt {
   // Liste an Blatttexturen
@@ -41,9 +41,9 @@ public class Blatt extends BasisObjekt {
     // Generiere eine zufällige Farbe, die zwischen den Rot- und Orange-Werten in Blatt.colors liegt
     float randomValue = ThreadLocalRandom.current().nextFloat();
     this.color = new float[]{
-        randomValue * (colors[0][0] - colors[1][0]) + colors[1][0],
-        randomValue * (colors[0][1] - colors[1][1]) + colors[1][1],
-        randomValue * (colors[0][2] - colors[1][2]) + colors[1][2],
+        NumberUtil.lerp(colors[0][0], colors[1][0], randomValue),
+        NumberUtil.lerp(colors[0][1], colors[1][1], randomValue),
+        NumberUtil.lerp(colors[0][2], colors[1][2], randomValue),
     };
 
     try {
