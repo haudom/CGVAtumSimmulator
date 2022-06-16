@@ -1,17 +1,5 @@
 package main;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glOrtho;
-
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -20,6 +8,9 @@ import main.objekte.BasisObjekt;
 import main.objekte.Blatt;
 import main.objekte.Laubgeblaese;
 import org.lwjgl.opengl.Display;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glTranslated;
 
 public class AutumnSimulator extends LWJGLBasisFenster {
   private Wind wind;
@@ -39,7 +30,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
     objekte = ObjektManager.getExemplar();
 
     // Render erst die Blätter
-    erzeugeBlaetter(100);
+    erzeugeBlaetter(50);
 
     // Render Laubgebläse zum Schluss
     objekte.add(laubgeblaese);
@@ -73,7 +64,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
 
   @Override
   public void renderLoop() {
-    glEnable(GL_DEPTH_TEST);
+
 
     // Haupt-loop. Solange die UserIn das Fenster nicht schließen möchte, fahre mit der Game-loop
     // fort.
@@ -85,14 +76,19 @@ public class AutumnSimulator extends LWJGLBasisFenster {
       lastTime = now;
 
       // Zeichne eine Hintergrundfarbe
+
       glClearColor(0.95f, 0.95f, 0.95f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
 
       glMatrixMode(GL_PROJECTION);
       glLoadIdentity();
-      glOrtho(0, WIDTH, HEIGHT, 0, 0, 1);
+      glOrtho(0, WIDTH, HEIGHT, 0, -0, 1000);
       glMatrixMode(GL_MODELVIEW);
-      glDisable(GL_DEPTH_TEST);
+
+
+
+
+
 
       for (BasisObjekt objekt : objekte.getMap().values()) {
         wind.update(diff);

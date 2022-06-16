@@ -1,15 +1,18 @@
 package main.objekte;
 
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glTranslated;
-
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
+
+import kapitel01.Model;
 import kapitel01.POGL;
 import kapitel04.Vektor2D;
 import kapitel04.Vektor3D;
 import main.Wind;
 import org.lwjgl.opengl.Display;
+
+import static org.lwjgl.opengl.GL11.*;
+
 
 public class Blatt extends BasisObjekt {
   // Liste an Blatttexturen
@@ -25,6 +28,7 @@ public class Blatt extends BasisObjekt {
   public Vektor3D velocity;
   public Vektor3D gravity = new Vektor3D();
   public double mass = 0.001;
+  Model model;
 
   public float[] color;
 
@@ -42,16 +46,30 @@ public class Blatt extends BasisObjekt {
         randomValue * (colors[0][1] - colors[1][1]) + colors[1][1],
         randomValue * (colors[0][2] - colors[1][2]) + colors[1][2],
     };
+
+    try {
+      model = POGL.loadModel(new File("./objects/Blatt.obj"));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+
   }
 
   @Override
   public void render() {
+
     glLoadIdentity();
-    glTranslated(position.x, position.y, position.z);
 
-    glColor4f(color[0], color[1], color[2], 1.0f);
+      glTranslated(position.x, position.y, position.z -400);
 
-    POGL.renderViereck(10, 10);
+      glColor4f(color[0], color[1], color[2], 1.0f);
+
+      glScaled(30,30,30);
+      glRotated(90,0.4,1,0);
+
+    //POGL.renderViereck(10, 10);
+    POGL.renderObject(model);
   }
 
   public double getBottom() {
