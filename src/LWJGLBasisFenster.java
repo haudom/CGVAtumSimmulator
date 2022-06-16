@@ -1,5 +1,3 @@
-package kapitel01;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -8,9 +6,9 @@ import java.awt.*;
 
 /*
  * Beschreibung:
- * Als Erweiterung kommt hinzu, dass wir ein Canvas-Objekt zum zeichnen
- * �bergeben k�nnen. Dazu m�ssen wir den init-Teil selbst aktiv im Konstruktor
- * ausf�hren und start() auf den renderLoop() und das Abmelden reduzieren.
+ * Als Erweiterung kommt hinzu, dass wir ein Canvas-Objekt zum Zeichnen
+ * übergeben können. Dazu müssen wir den init-Teil selbst aktiv im Konstruktor
+ * ausführen und start() auf den renderLoop() und das Abmelden reduzieren.
  */
 public abstract class LWJGLBasisFenster {
    public int WIDTH, HEIGHT;
@@ -27,7 +25,7 @@ public abstract class LWJGLBasisFenster {
    public LWJGLBasisFenster(String title, int width, int height) {
       WIDTH = width;
       HEIGHT = height;
-      TITLE = /*"vividus Wissenschaftsverlag. Warum sich der Dino furchtbar erschreckte. " +*/ title;
+      TITLE = title;
    }
 
    public void initDisplay(Canvas c) {

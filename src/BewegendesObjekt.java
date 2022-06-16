@@ -16,8 +16,6 @@ public abstract class BewegendesObjekt extends BasisObjekt {
 	public int WIDTH;
 	public int HEIGTH;
 	public Weg2DDynamisch wegHistorie;
-	
-	public Verhalten verhalten = null;
 
 	public BewegendesObjekt(Vektor2D position, Vektor2D velocity) {
 		super(position);
@@ -134,14 +132,5 @@ public abstract class BewegendesObjekt extends BasisObjekt {
 			setSide(new Vektor2D(0, 1));
 		}
 		
-	}
-
-	public void setVerhalten(Verhalten verhalten) {
-		this.verhalten = verhalten;
-	}
-
-	public void update(double time) {
-		if (verhalten != null)
-			verhalten.update(time);
 	}
 }

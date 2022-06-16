@@ -3,11 +3,11 @@
 import java.util.HashMap;
 
 public class ObjektManager {
-   private HashMap<Integer, Agent> partikel;
+   private HashMap<Integer, BasisObjekt> partikel;
    private static ObjektManager exemplar = new ObjektManager();
 
    private ObjektManager() {
-      partikel = new HashMap<Integer, Agent>();
+      partikel = new HashMap<Integer, BasisObjekt>();
    }
 
    public static ObjektManager getExemplar() {
@@ -18,19 +18,19 @@ public class ObjektManager {
       throw new CloneNotSupportedException("Clonen ist nicht erlaubt");
    }
    
-   public void registrierePartikel(Agent obj) {
+   public void registrierePartikel(BasisObjekt obj) {
       partikel.put(new Integer(obj.id), obj);
    }
 
-   public void entfernePartikel(Agent obj) {
+   public void entfernePartikel(BasisObjekt obj) {
       partikel.remove(obj);
    }
    
-   public Agent getAgent(int objID) {
+   public BasisObjekt getAgent(int objID) {
       return partikel.get(new Integer(objID));
    }
    
-   public HashMap<Integer, Agent> getPartikelMap() {
+   public HashMap<Integer, BasisObjekt> getPartikelMap() {
       return partikel;
    }
    
