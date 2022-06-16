@@ -39,9 +39,9 @@ public class Wind implements Updatebar {
     this.maxWind = maxWind;
     this.velocity = new Vektor3D(0, 0, 0);
 
-    // Damit, durch die zufälligen Werte, der main.Wind nicht jeden Frame hin und her schlägt,
+    // Damit, durch die zufälligen Werte, der Wind nicht jeden Frame hin und her schlägt,
     // erstellen wir ein Array von vorherigen Windwerten, um dann daraus ein Mittel zu bilden,
-    // damit der main.Wind glatter wirkt.
+    // damit der Wind glatter wirkt.
     this.alteWerte = new Vektor3D[traegheit];
     for (int i = 0; i < traegheit; i++) {
       this.alteWerte[i] = new Vektor3D(0, 0, 0);

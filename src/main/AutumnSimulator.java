@@ -30,10 +30,12 @@ public class AutumnSimulator extends LWJGLBasisFenster {
   public AutumnSimulator(String title, int width, int height) {
     super(title, width, height);
 
-    initDisplay();
-
-    wind = new Wind(10);
-    laubgeblaese = new Laubgeblaese();
+    wind = new Wind(
+        100,
+        new Vektor3D(-300, -500, 0),
+        new Vektor3D(500, 10, 0)
+    );
+    laubgeblaese = new Laubgeblaese(2000, 60);
     objekte = ObjektManager.getExemplar();
 
     // Render erst die Blätter
@@ -51,7 +53,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
           laubgeblaese,
           wind,
           new Vektor3D(rand.nextInt(WIDTH), rand.nextInt(HEIGHT), 0),
-          new Vektor3D(rand.nextFloat() * 20 - 10, 0, 0)
+          new Vektor3D(rand.nextFloat() * 5 - 2.5, rand.nextFloat() - 0.5, 0)
       ));
     }
   }
@@ -93,6 +95,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
       glDisable(GL_DEPTH_TEST);
 
       for (BasisObjekt objekt : objekte.getMap().values()) {
+        wind.update(diff);
 
         objekt.update(diff);
         objekt.render();
@@ -103,6 +106,6 @@ public class AutumnSimulator extends LWJGLBasisFenster {
   }
 
   public static void main(String[] args) {
-    new AutumnSimulator("Autumn Simulator", 800, 600).start();
+    new AutumnSimulator("Autumn Simulator", 1280, 800).start();
   }
 }

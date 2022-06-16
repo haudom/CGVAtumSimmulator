@@ -4,11 +4,12 @@ import static org.lwjgl.opengl.GL11.glColor4f;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glTranslated;
 
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import kapitel01.POGL;
+import kapitel04.Vektor2D;
 import kapitel04.Vektor3D;
 import main.Wind;
+import org.lwjgl.opengl.Display;
 
 public class Blatt extends BasisObjekt {
   // Liste an Blatttexturen
@@ -22,7 +23,9 @@ public class Blatt extends BasisObjekt {
   public Wind wind;
 
   public Vektor3D velocity;
-  public double mass = 0;
+  public Vektor3D gravity = new Vektor3D();
+  public double mass = 0.001;
+
   public float[] color;
 
   public Blatt(Laubgeblaese laubgeblaese, Wind wind, Vektor3D position, Vektor3D velocity) {
@@ -46,13 +49,76 @@ public class Blatt extends BasisObjekt {
     glLoadIdentity();
     glTranslated(position.x, position.y, position.z);
 
-    glColor4f(this.color[0], this.color[1], this.color[2], 1.0f);
+    glColor4f(color[0], color[1], color[2], 1.0f);
 
     POGL.renderViereck(10, 10);
   }
 
+  public double getBottom() {
+    return Display.getDisplayMode().getHeight() * 0.9;
+  }
+
+  public double getReibung() {
+    double BOTTOM = getBottom();
+
+    // Wenn Blätter am Boden liegen, sollten sie schwerer zu bewegen sein
+    return Math.max(0.0, position.y - (BOTTOM * 0.9)) / (BOTTOM * 0.1);
+  }
+
   @Override
   public void update(double time) {
-    super.update(time);
+    int WIDTH = Display.getDisplayMode().getWidth();
+    double BOTTOM = getBottom();
+
+    double PPM = (double) BOTTOM / 7; // Pixel per Meter // TODO GL-Einheiten auf Meter anpassen?
+
+    /* ******* SETUP ****** */
+
+    Vektor3D velocitySum = new Vektor3D();
+
+    velocitySum.add(wind.velocity);
+    velocitySum.add(velocity);
+
+    /* ******* REIBUNG ****** */
+
+    double reibung = getReibung();
+
+    // wenn Blatt auf dem Boden liegt, ist es sehr schwer horizontal bewegbar
+    velocitySum.setX(velocitySum.x * (1.0 - reibung));
+    // wenn Blatt auf dem Boden liegt, ist es ein wenig schwerer vertikal bewegbar, damit es
+    // noch die Chance hat wieder vom Boden hochzukommen und sich mehr zu bewegen
+    velocitySum.setY(velocitySum.y * (0.5 - reibung * 0.5)); // 50% der Reibung
+
+    /* ******* GRAVITY ****** */
+
+    // Wenn Blatt am Boden liegt, setze Erdanziehungskraft zurück
+    if (reibung == 1.0) {
+      gravity = new Vektor3D(0, 0, 0);
+    } else {
+      // Erdanziehungskraft extra auf Kräfte addieren F = m * 9.81 m/s²
+      double F = mass * 9.81 * PPM;
+      gravity.add(new Vektor3D(0, F, 0));
+    }
+
+    velocitySum.add(gravity);
+
+    /* ******* LAUBGEBLÄSE ****** */
+
+    velocitySum.add(laubgeblaese.getForceAt(position));
+
+    /* ******* APPLY VELOCITY ****** */
+
+    // Alle Velocity Werte sind x viele Pixel pro Sekunde, deswegen muss der Vektor noch auf
+    // die Zeit angepasst werden, die wirklich zwischen dem aktuellen und letzten Frame vergangen
+    // sind.
+    velocitySum.mult(time);
+    position.add(velocitySum);
+
+    /* ******* ÜBERPRÜFE BILDRÄNDER ****** */
+
+    // Überprüfe, ob Blatt über die Bildränder hinausgehen würde
+    if (position.x < 0) position.setX(WIDTH + position.x);
+    if (position.x > WIDTH) position.setX(position.x - WIDTH);
+    if (position.y > BOTTOM) position.setY(BOTTOM);
   }
 }

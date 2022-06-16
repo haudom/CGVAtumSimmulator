@@ -16,31 +16,12 @@ public abstract class LWJGLBasisFenster {
    public int WIDTH, HEIGHT;
    public String TITLE;
 
-   public LWJGLBasisFenster() {
-      this("main.LWJGLBasisFenster", 800, 450);
-   }
-
-   public LWJGLBasisFenster(int width, int height) {
-      this("main.LWJGLBasisFenster", width, height);
-   }
-
    public LWJGLBasisFenster(String title, int width, int height) {
       WIDTH = width;
       HEIGHT = height;
       TITLE = title;
-   }
 
-   public void initDisplay(Canvas c) {
-      try {
-         Display.setParent(c);
-         Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
-         Display.setTitle(TITLE);
-         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-         Display.setLocation((d.width-WIDTH)/2, (d.height-HEIGHT)/2);
-         Display.create();
-      } catch (LWJGLException e) {
-         e.printStackTrace();
-      }
+      initDisplay();
    }
 
    public void initDisplay() {

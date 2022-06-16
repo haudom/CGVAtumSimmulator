@@ -35,8 +35,8 @@ public class POGL {
 	}
 
 	public static void renderViereck(int width, int height) {
-		float halfWidth = width / 2;
-		float halfHeight = height / 2;
+		float halfWidth = (float) width / 2;
+		float halfHeight = (float) height / 2;
 
 		glBegin(GL_QUADS);
 		glVertex3f(-halfWidth, -halfHeight, 0);
@@ -283,11 +283,11 @@ public class POGL {
 		glVertex3d(-off/15., 0, 0);
 		glEnd();
 
-        glBegin(GL_TRIANGLES);
-        glVertex3d(  0f,  .2f, 0);
-        glVertex3d(  0f, -.2f, 0);
-        glVertex3d( .5f,   0f, 0);
-        glEnd();    		
+		glBegin(GL_TRIANGLES);
+		glVertex3d(  0f,  .2f, 0);
+		glVertex3d(  0f, -.2f, 0);
+		glVertex3d( .5f,   0f, 0);
+		glEnd();
 	}
 	
 	public static void renderObjectWithForces(float x, float y, int radius, Vektor2D velocity, Vektor2D acceleration) {
