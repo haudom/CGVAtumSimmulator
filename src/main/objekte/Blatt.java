@@ -1,3 +1,5 @@
+package main.objekte;
+
 import kapitel01.POGL;
 import kapitel04.Vektor2D;
 

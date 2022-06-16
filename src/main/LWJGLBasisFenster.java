@@ -1,3 +1,5 @@
+package main;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -15,11 +17,11 @@ public abstract class LWJGLBasisFenster {
    public String TITLE;
 
    public LWJGLBasisFenster() {
-      this("LWJGLBasisFenster", 800, 450);
+      this("main.LWJGLBasisFenster", 800, 450);
    }
 
    public LWJGLBasisFenster(int width, int height) {
-      this("LWJGLBasisFenster", width, height);
+      this("main.LWJGLBasisFenster", width, height);
    }
 
    public LWJGLBasisFenster(String title, int width, int height) {

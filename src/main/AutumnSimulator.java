@@ -1,4 +1,4 @@
-
+package main;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
@@ -15,6 +15,9 @@ import static org.lwjgl.opengl.GL11.glOrtho;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import main.objekte.BasisObjekt;
+import main.objekte.Blatt;
+import main.objekte.Laubgeblaese;
 import org.lwjgl.opengl.Display;
 
 import kapitel04.Vektor2D;
@@ -75,6 +78,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
       double diff = (now - last) / 1e9;
       last = now;
 
+      // Zeichne eine Hintergrundfarbe
       glClearColor(0.95f, 0.95f, 0.95f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
 
@@ -97,6 +101,6 @@ public class AutumnSimulator extends LWJGLBasisFenster {
   }
 
   public static void main(String[] args) {
-    new AutumnSimulator("Autumn Simulator", 800, 450).start();
+    new AutumnSimulator("Autumn Simulator", 800, 600).start();
   }
 }

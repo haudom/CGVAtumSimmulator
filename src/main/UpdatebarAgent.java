@@ -1,4 +1,4 @@
-
+package main;
 
 import kapitel04.LineareAlgebra;
 import kapitel04.Vektor2D;

@@ -1,13 +1,14 @@
-import kapitel04.Vektor2D;
+package main;
+
 import kapitel04.Vektor3D;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Die Wind-Klasse ist ein updatebares Objekt, das Wind-ähnliches Physikverhalten simuliert
+ * Die main.Wind-Klasse ist ein updatebares Objekt, das main.Wind-ähnliches Physikverhalten simuliert
  * und dessen velocity-Vektor auf die Position von Elementen addiert werden kann, um auf ihnen
- * Wind zu simulieren.
+ * main.Wind zu simulieren.
  */
 public class Wind implements Updatebar {
   public Vektor3D velocity;
@@ -38,9 +39,9 @@ public class Wind implements Updatebar {
     this.maxWind = maxWind;
     this.velocity = new Vektor3D(0, 0, 0);
 
-    // Damit, durch die zufälligen Werte, der Wind nicht jeden Frame hin und her schlägt,
+    // Damit, durch die zufälligen Werte, der main.Wind nicht jeden Frame hin und her schlägt,
     // erstellen wir ein Array von vorherigen Windwerten, um dann daraus ein Mittel zu bilden,
-    // damit der Wind glatter wirkt.
+    // damit der main.Wind glatter wirkt.
     this.alteWerte = new Vektor3D[traegheit];
     for (int i = 0; i < traegheit; i++) {
       this.alteWerte[i] = new Vektor3D(0, 0, 0);

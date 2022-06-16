@@ -1,4 +1,7 @@
+package main.objekte;
+
 import kapitel04.Vektor2D;
+import main.Updatebar;
 
 public abstract class BasisObjekt implements Updatebar {
    private static int objCounter = 0;

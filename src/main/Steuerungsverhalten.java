@@ -1,8 +1,9 @@
-
+package main;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import main.objekte.BasisObjekt;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 

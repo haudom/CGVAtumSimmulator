@@ -1,6 +1,7 @@
-
+package main;
 
 import java.util.HashMap;
+import main.objekte.BasisObjekt;
 
 public class ObjektManager {
    private HashMap<Integer, BasisObjekt> partikel;

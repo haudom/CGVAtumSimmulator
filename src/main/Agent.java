@@ -1,4 +1,4 @@
-
+package main;
 
 import kapitel01.POGL;
 import kapitel01.Weg2DDynamisch;

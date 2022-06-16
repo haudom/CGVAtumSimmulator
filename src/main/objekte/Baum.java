@@ -1,3 +1,5 @@
+package main.objekte;
+
 public class Baum extends BasisObjekt {
   // Liste an Blatttexturen
   static private String texture = "";
