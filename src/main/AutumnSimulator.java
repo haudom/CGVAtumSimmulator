@@ -12,6 +12,8 @@ import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -24,7 +26,7 @@ import org.lwjgl.opengl.Display;
 public class AutumnSimulator extends LWJGLBasisFenster {
   private Wind wind;
   private Laubgeblaese laubgeblaese;
-  private ObjektManager objekte;
+  private List<BasisObjekt> objekte = new ArrayList<BasisObjekt>();
   private long lastTime = System.nanoTime();
 
   public AutumnSimulator(String title, int width, int height) {
@@ -35,8 +37,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
         new Vektor3D(-300, -500, 0),
         new Vektor3D(500, 10, 0)
     );
-    laubgeblaese = new Laubgeblaese(2000, 60);
-    objekte = ObjektManager.getExemplar();
+    laubgeblaese = new Laubgeblaese(2000, 60, 0.5);
 
     // Render erst die Blätter
     erzeugeBlaetter(100);
@@ -94,7 +95,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
       glMatrixMode(GL_MODELVIEW);
       glDisable(GL_DEPTH_TEST);
 
-      for (BasisObjekt objekt : objekte.getMap().values()) {
+      for (BasisObjekt objekt : objekte) {
         wind.update(diff);
 
         objekt.update(diff);

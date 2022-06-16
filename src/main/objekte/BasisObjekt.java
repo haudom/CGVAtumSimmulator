@@ -1,13 +1,9 @@
 package main.objekte;
 
-import kapitel04.Vektor2D;
 import kapitel04.Vektor3D;
 import main.Updatebar;
 
 public abstract class BasisObjekt implements Updatebar {
-   private static int objCounter = 0;
-
-   public int id;
    public Vektor3D position;
    
    public BasisObjekt() {
@@ -15,7 +11,6 @@ public abstract class BasisObjekt implements Updatebar {
    }
    
    public BasisObjekt(Vektor3D position) {
-      this.id = objCounter++;
       this.position = new Vektor3D(position);
    }
    
