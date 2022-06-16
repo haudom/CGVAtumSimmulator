@@ -1,34 +1,32 @@
 package main.objekte;
 
-import kapitel04.Vektor2D;
 import kapitel04.Vektor3D;
 import main.Updatebar;
 
 public abstract class BasisObjekt implements Updatebar {
-   private static int objCounter = 0;
-
-   public int id;
+   public Vektor3D rotation;
    public Vektor3D position;
+   public Vektor3D velocity;
    
    public BasisObjekt() {
       this(new Vektor3D(0,0, 0));
    }
-   
+
    public BasisObjekt(Vektor3D position) {
-      this.id = objCounter++;
+      this(position, new Vektor3D(0, 0, 0));
+   }
+
+   public BasisObjekt(Vektor3D position, Vektor3D velocity) {
+      this(position, velocity, new Vektor3D(0, 0, 0));
+   }
+
+   public BasisObjekt(Vektor3D position, Vektor3D velocity, Vektor3D rotation) {
       this.position = new Vektor3D(position);
-   }
-   
-   public Vektor3D getPosition() {
-	   return position;
-   }
-   
-   public void setPosition(Vektor3D pos) {
-	   position = new Vektor3D(pos);
+      this.velocity = new Vektor3D(velocity);
+      this.rotation = new Vektor3D(rotation);
    }
 
    public abstract void render();
 
-   public void update(double time) {
-   }
+   public void update(double time) {}
 }
