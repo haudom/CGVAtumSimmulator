@@ -14,10 +14,8 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
 public class Laubgeblaese extends BasisObjekt {
-  public float winkel;
-
-  public double maxWindStaerke;
   public double windStaerke = 0;
+  public double maxWindStaerke;
   public double windWinkel;
 
   /**
@@ -42,7 +40,7 @@ public class Laubgeblaese extends BasisObjekt {
   public void render() {
     glLoadIdentity();
     glTranslated(position.x, position.y, position.z);
-    glRotatef(winkel, 0, 0, 1); // Rotiere
+    glRotatef((float) rotation.z, 0, 0, 1); // Rotiere um die z-Achse
 
     glColor4f(0.0f, 1.0f, 1.0f, 1.0f);
 
@@ -57,9 +55,11 @@ public class Laubgeblaese extends BasisObjekt {
     Vektor2D mouse = mousePosition();
     position = new Vektor3D(mouse.x, mouse.y, 0);
     // drehe den Laubbläser so, dass er immer ins Bildzentrum zeigt
-    winkel = (float) VektorUtil.getWinkel(
-        new Vektor2D(position.x, position.y),
-        new Vektor2D((float) WIDTH / 2, (float) HEIGHT / 2)
+    rotation.setZ(
+        VektorUtil.getWinkel(
+            new Vektor2D(position.x, position.y),
+            new Vektor2D((float) WIDTH / 2, (float) HEIGHT / 2)
+        )
     );
 
     // Wenn der Mausbutton gedrückt wird, schalte Gebläse an, wenn nicht schalte aus
@@ -82,13 +82,13 @@ public class Laubgeblaese extends BasisObjekt {
     // Ziehe den Winkel des Bläsers ab um die Orientierung von Blatt zu Auspusterohr des Bläsers
     // zu berechnen. Wenn das Blatt direkt in der Schusslinie ist, ist der Winkel 180 Grad.
     // Deswegen ziehen wir nochmal 180 Grad ab
-    double schussbahnWinkel = (winkelBlaeserBlatt - winkel - 180.0) % 360.0;
+    double schussbahnWinkel = Math.floorMod((int) (winkelBlaeserBlatt - rotation.z), 360) - 180.0;
 
     double halbWindWinkel = windWinkel / 2;
 
     // Wenn das Blatt in Schussbahn liegt, fahre fort
     if (Math.abs(schussbahnWinkel) <= halbWindWinkel) {
-      Vektor2D richtungsVektor2D = LineareAlgebra.rotate(new Vektor2D(-windStaerke, 0), winkel);
+      Vektor2D richtungsVektor2D = LineareAlgebra.rotate(new Vektor2D(-windStaerke, 0), rotation.z);
       Vektor3D velocity = new Vektor3D(richtungsVektor2D.x, richtungsVektor2D.y, 0);
 
       Vektor3D distanzVektor = new Vektor3D(blatt);

@@ -22,7 +22,6 @@ public class Blatt extends BasisObjekt {
   public Laubgeblaese laubgeblaese;
   public Wind wind;
 
-  public Vektor3D velocity;
   public Vektor3D gravity = new Vektor3D();
   public double mass = 0.001;
 
