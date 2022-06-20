@@ -10,7 +10,6 @@ import kapitel04.Vektor3D;
 import main.Wind;
 import main.utility.NumberUtil;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.util.vector.Vector3f;
 
 import static org.lwjgl.opengl.GL11.*;
 

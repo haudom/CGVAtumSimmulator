@@ -1,19 +1,8 @@
 package main;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glOrtho;
-
+import static org.lwjgl.opengl.GL11.*;
+import org.lwjgl.opengl.Display;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -22,15 +11,11 @@ import main.objekte.BasisObjekt;
 import main.objekte.Baum;
 import main.objekte.Blatt;
 import main.objekte.Laubgeblaese;
-import org.lwjgl.opengl.Display;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.glTranslated;
 
 public class AutumnSimulator extends LWJGLBasisFenster {
   private Wind wind;
   private Laubgeblaese laubgeblaese;
-  private List<BasisObjekt> objekte = new ArrayList<BasisObjekt>();
+  private ArrayList<BasisObjekt> objekte = new ArrayList<BasisObjekt>();
   private long lastTime = System.nanoTime();
 
   public AutumnSimulator(String title, int width, int height) {
@@ -102,11 +87,6 @@ public class AutumnSimulator extends LWJGLBasisFenster {
       glLoadIdentity();
       glOrtho(0, WIDTH, HEIGHT, 0, -0, 1000);
       glMatrixMode(GL_MODELVIEW);
-
-
-
-
-
 
       for (BasisObjekt objekt : objekte) {
         wind.update(diff);
