@@ -2,8 +2,8 @@ package main;
 
 import kapitel04.Vektor3D;
 
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import main.utility.NumberUtil;
+import main.utility.SimplexNoise;
 
 /**
  * Die main.Wind-Klasse ist ein updatebares Objekt, das main.Wind-ähnliches Physikverhalten simuliert
@@ -11,64 +11,39 @@ import java.util.concurrent.ThreadLocalRandom;
  * main.Wind zu simulieren.
  */
 public class Wind implements Updatebar {
+  private Vektor3D position = new Vektor3D();
+
   public Vektor3D velocity;
   public Vektor3D minWind;
   public Vektor3D maxWind;
 
-  private Vektor3D[] alteWerte;
-  private int alteWerteIndex = 0;
-
-  private Random zufall = ThreadLocalRandom.current();
-
-  public Wind(int traegheit) {
-    this(
-        traegheit,
-        new Vektor3D(-20, -20, 0),
-        new Vektor3D(20, 20, 0)
-    );
-  }
 
   /**
-   * @param traegheit Die Trägheit des Windes. Je höher, desto weniger stark ändert sich die
-   *                  Richtung.
    * @param minWind Die mindeste Windstärke
    * @param maxWind Die maximalste Windstärke
    */
-  public Wind(int traegheit, Vektor3D minWind, Vektor3D maxWind) {
+  public Wind(Vektor3D minWind, Vektor3D maxWind) {
     this.minWind = minWind;
     this.maxWind = maxWind;
     this.velocity = new Vektor3D(0, 0, 0);
-
-    // Damit, durch die zufälligen Werte, der Wind nicht jeden Frame hin und her schlägt,
-    // erstellen wir ein Array von vorherigen Windwerten, um dann daraus ein Mittel zu bilden,
-    // damit der Wind glatter wirkt.
-    this.alteWerte = new Vektor3D[traegheit];
-    for (int i = 0; i < traegheit; i++) {
-      this.alteWerte[i] = new Vektor3D(0, 0, 0);
-    }
   }
 
   public void update(double time) {
     // Erstelle einen zufälligen Vektor
     this.velocity = new Vektor3D(
-        zufall.nextFloat() * (maxWind.x - minWind.x) + minWind.x,
-        zufall.nextFloat() * (maxWind.y - minWind.y) + minWind.y,
-        zufall.nextFloat() * (maxWind.z - minWind.z) + minWind.z
+        NumberUtil.lerp(
+            minWind.x,
+            maxWind.y,
+            SimplexNoise.noise(position.x, position.y, position.z)
+        ),
+        0,
+        0
     );
 
-    // Bilde den Durchschnitt der vorherigen Windwerte.
-    // Addiere alle vorherigen Windvektoren auf den Zufallsvektor drauf
-    for (Vektor3D alterWind : alteWerte) {
-      this.velocity.add(alterWind);
-    }
-    // Dividiere die Summe aller Werte mit Array-Länge + 1 (+1 wegen der Zufallswerte,
-    // die schon im this.velocity-Vektor drin waren, bevor die alten Werte drauf addiert wurden).
-    this.velocity.mult(1.0 / (alteWerte.length + 1));
-
-    // erhöhe den Schreib-Index
-    if (++alteWerteIndex >= this.alteWerte.length) {
-      alteWerteIndex = 0;
-    }
-    alteWerte[alteWerteIndex] = this.velocity;
+    position.add(new Vektor3D(
+        time * 0.002,
+        time * 0.002,
+        time * 0.002
+    ));
   }
 }
