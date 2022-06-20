@@ -15,7 +15,6 @@ import static org.lwjgl.opengl.GL11.glOrtho;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -35,7 +34,7 @@ import static org.lwjgl.opengl.GL11.glTranslated;
 public class AutumnSimulator extends LWJGLBasisFenster {
   private Wind wind;
   private Laubgeblaese laubgeblaese;
-  private List<BasisObjekt> objekte = new ArrayList<BasisObjekt>();
+  private ArrayList<BasisObjekt> objekte = new ArrayList<BasisObjekt>();
   private long lastTime = System.nanoTime();
 
   public AutumnSimulator(String title, int width, int height) {
