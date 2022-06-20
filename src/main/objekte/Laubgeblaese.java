@@ -10,6 +10,7 @@ import kapitel04.LineareAlgebra;
 import kapitel04.Vektor2D;
 import kapitel04.Vektor3D;
 import main.utility.VektorUtil;
+import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
@@ -21,10 +22,11 @@ public class Laubgeblaese extends BasisObjekt {
 
   /**
    * Erstellt ein neues Laubgebläse als Objekt, mit Laubgebläse-Logik.
+   *
    * @param maxWindStaerke Setzt die maximale Stärke, die das Gebläse blasen kann.
-   * @param windWinkel Setzt den Abstrahlwinkel, in dem Wind empfangen wird.
-   * @param windKante Setzt die Weiche der Kante, ab der laut windWinkel kein Wind mehr
-   *                  empfangen wird von 0.0 bis 1.0.
+   * @param windWinkel     Setzt den Abstrahlwinkel, in dem Wind empfangen wird.
+   * @param windKante      Setzt die Weiche der Kante, ab der laut windWinkel kein Wind mehr
+   *                       empfangen wird von 0.0 bis 1.0.
    */
   public Laubgeblaese(double maxWindStaerke, double windWinkel, double windKante) {
     this.maxWindStaerke = maxWindStaerke;
@@ -60,10 +62,10 @@ public class Laubgeblaese extends BasisObjekt {
     position = new Vektor3D(mouse.x, mouse.y, 0);
     // drehe den Laubbläser so, dass er immer ins Bildzentrum zeigt
     rotation.setZ(
-        VektorUtil.getWinkel(
-            new Vektor2D(position.x, position.y),
-            new Vektor2D((float) WIDTH / 2, (float) HEIGHT / 2)
-        )
+            VektorUtil.getWinkel(
+                    new Vektor2D(position.x, position.y),
+                    new Vektor2D((float) WIDTH / 2, (float) HEIGHT / 2)
+            )
     );
 
     // Wenn der Mausbutton gedrückt wird, schalte Gebläse an, wenn nicht schalte aus
@@ -94,6 +96,7 @@ public class Laubgeblaese extends BasisObjekt {
     if (Math.abs(schussbahnWinkel) <= halbWindWinkel) {
       Vektor2D richtungsVektor2D = LineareAlgebra.rotate(new Vektor2D(-windStaerke, 0), rotation.z);
       Vektor3D velocity = new Vektor3D(richtungsVektor2D.x, richtungsVektor2D.y, 0);
+     //velocity.normalize();
 
       Vektor3D distanzVektor = new Vektor3D(blatt);
       distanzVektor.sub(position);
@@ -102,11 +105,13 @@ public class Laubgeblaese extends BasisObjekt {
       double distanzStaerke = 1.0 - Math.sqrt(distanzVektor.length() / WIDTH);
 
       // Reduziere die Kraft am Rand
-      double maxKante = halbWindWinkel;
-      double minKante = halbWindWinkel * windKante;
-      double randStaerke = Math.min(1.0, 1.0 - (Math.abs(schussbahnWinkel) - minKante) / (maxKante - minKante));
+//      double maxKante = halbWindWinkel;
+//      double minKante = halbWindWinkel * windKante;
+//      double randStaerke = Math.min(1.0, 1.0 - (Math.abs(schussbahnWinkel) - minKante) / (maxKante - minKante));
 
-      velocity.mult(distanzStaerke * randStaerke);
+      velocity.mult(distanzStaerke /* * randStaerke*/);
+
+
 
       return velocity;
     } else {

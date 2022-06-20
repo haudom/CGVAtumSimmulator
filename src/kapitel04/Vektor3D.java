@@ -24,6 +24,11 @@ public class Vektor3D {
 	public Vektor3D(Vektor3D a, Vektor3D b) {
 		this(b.x - a.x, b.y - a.y, b.z - a.z);
 	}
+	public void round(){
+		x= Math.round(x * 10000000)/(double)10000000;
+		y= Math.round(y * 10000000)/(double)10000000;
+		z= Math.round(z * 10000000)/(double)10000000;
+	}
 
 	public void setX(double x) {
 		this.x = x;
@@ -63,18 +68,22 @@ public class Vektor3D {
 		x += vec.x;
 		y += vec.y;
 		z += vec.z;
+		round();
+
 	}
 
 	public void sub(Vektor3D vec) {
 		x -= vec.x;
 		y -= vec.y;
 		z -= vec.z;
+		round();
 	}
 
 	public void mult(double s) {
 		x *= s;
 		y *= s;
 		z *= s;
+		round();
 	}
 
 	public boolean isEqual(Vektor3D vec) {
