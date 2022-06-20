@@ -21,11 +21,22 @@ public abstract class LWJGLBasisFenster {
       HEIGHT = height;
       TITLE = title;
 
-      initDisplay();
    }
 
    public void initDisplay() {
       try {
+         Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
+         Display.setTitle(TITLE);
+         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+         Display.setLocation((d.width-WIDTH)/2, (d.height-HEIGHT)/2);
+         Display.create();
+      } catch (LWJGLException e) {
+         e.printStackTrace();
+      }
+   }
+   public void initDisplay(Canvas c) {
+      try {
+         Display.setParent(c);
          Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
          Display.setTitle(TITLE);
          Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
