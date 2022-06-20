@@ -64,7 +64,7 @@ public class Blatt extends BasisObjekt {
 
       glColor4f(color[0], color[1], color[2], 1.0f);
 
-      glScaled(30,30,30);
+      glScaled(10,10,10);
       glRotated(90,0.4,1,0);
 
     //POGL.renderViereck(10, 10);
