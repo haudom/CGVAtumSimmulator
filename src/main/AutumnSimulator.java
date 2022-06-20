@@ -37,14 +37,17 @@ public class AutumnSimulator extends LWJGLBasisFenster {
     super(title, width, height);
 
     wind = new Wind(
-        30,
-        new Vektor3D(-900, -50, 0),
-        new Vektor3D(1000, 10, 0)
+        new Vektor3D(5, -50, 0),
+        new Vektor3D(5000, 40, 0)
     );
-    laubgeblaese = new Laubgeblaese(2000, 60, 0.5);
+    laubgeblaese = new Laubgeblaese(
+        500,
+        100,
+        0.5
+    );
 
     // Render erst die Blätter
-    erzeugeBlaetter(10);
+    erzeugeBlaetter(100);
     objekte.add(new Baum());
     // Render Laubgebläse zum Schluss
     objekte.add(laubgeblaese);
