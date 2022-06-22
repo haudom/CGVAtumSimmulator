@@ -6,6 +6,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.*;
+import java.util.Scanner;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -43,6 +44,17 @@ public class POGL {
 		glVertex3f(halfWidth, -halfHeight, 0);
 		glVertex3f(halfWidth, halfHeight, 0);
 		glVertex3f(-halfWidth, halfHeight, 0);
+		glEnd();
+	}
+	public static void renderViereck(int width, int height, float z) {
+		float halfWidth = (float) width / 2;
+		float halfHeight = (float) height / 2;
+
+		glBegin(GL_QUADS);
+		glVertex3f(-halfWidth, -halfHeight, z);
+		glVertex3f(halfWidth, -halfHeight, z);
+		glVertex3f(halfWidth, halfHeight, z);
+		glVertex3f(-halfWidth, halfHeight, z);
 		glEnd();
 	}
 
@@ -361,4 +373,6 @@ public class POGL {
 		renderPfeil(x, y, off, (float)winkel, 15);
 		// *****************************************************************
 	}
+
 }
+

@@ -43,7 +43,7 @@ public class Blatt extends BasisObjekt {
     this.laubgeblaese = laubgeblaese;
     this.speed = velocity;
     rotation.x = 0;
-    rotation.y =1;
+    rotation.y = 1;
     rotation.z = 0;
 
     // Generiere eine zufällige Farbe, die zwischen den Rot- und Orange-Werten in Blatt.colors liegt
@@ -65,7 +65,7 @@ public class Blatt extends BasisObjekt {
   public void render() {
     glLoadIdentity();
 
-      glTranslated(position.x, position.y, position.z -400);
+      glTranslated(position.x, position.y, position.z );
 
       glColor4f(color[0], color[1], color[2], 1.0f);
 
@@ -104,7 +104,7 @@ public class Blatt extends BasisObjekt {
 
   public void addBlaserWindSpeed() {
     Vektor3D blaeser = new Vektor3D(laubgeblaese.getForceAt(position));
-    System.out.println("bläser: " + blaeser);
+//    System.out.println("bläser: " + blaeser);
     leafWindSpeed.add(blaeser);
   }
 
@@ -170,9 +170,9 @@ public class Blatt extends BasisObjekt {
     distance.mult(time);
 
     position.add(distance);
-    System.out.println("Speed:" + speed);
-    System.out.println("pos: " + position);
-    System.out.println("windSpeed: " + leafWindSpeed );
+//    System.out.println("Speed:" + speed);
+//    System.out.println("pos: " + position);
+//    System.out.println("windSpeed: " + leafWindSpeed );
 
     /* ******* ÜBERPRÜFE BILDRÄNDER ****** */
 

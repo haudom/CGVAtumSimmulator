@@ -14,15 +14,17 @@ import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
 
 import java.awt.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
+import java.util.Timer;
 import java.util.concurrent.ThreadLocalRandom;
 
 import kapitel04.Vektor3D;
-import main.objekte.BasisObjekt;
-import main.objekte.Baum;
-import main.objekte.Blatt;
-import main.objekte.Laubgeblaese;
+import main.objekte.*;
+import main.utility.DayTimer;
 import org.lwjgl.opengl.Display;
 
 import javax.swing.*;
@@ -30,12 +32,15 @@ import javax.swing.text.html.Option;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.glTranslated;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL40.glUniform1d;
 
 public class AutumnSimulator extends LWJGLBasisFenster {
   private Wind wind;
   private Laubgeblaese laubgeblaese;
   private ArrayList<BasisObjekt> objekte = new ArrayList<BasisObjekt>();
   private long lastTime = System.nanoTime();
+  private int myProgram = -1;
 
   public AutumnSimulator(String title, int width, int height) {
     super(title, width, height);
@@ -71,11 +76,58 @@ public class AutumnSimulator extends LWJGLBasisFenster {
     );
 
     // Render erst die Blätter
+    objekte.add(new Sun());
+    objekte.add(new Background(WIDTH,HEIGHT));
     erzeugeBlaetter(100);
     objekte.add(new Baum());
     // Render Laubgebläse zum Schluss
     objekte.add(laubgeblaese);
 
+  }
+  private void prepareShader(){
+    File vertexShader = new File("shader/shader.vert");
+    File fragmentShader = new File("shader/shader.frag");
+
+    try {
+      Scanner fragShadeRreader = new Scanner(fragmentShader);
+      Scanner vertShaderReader = new Scanner(vertexShader);
+
+      vertShaderReader.useDelimiter("\\Z");
+      fragShadeRreader.useDelimiter("\\Z");
+
+      if (!(vertShaderReader.hasNext()&&fragShadeRreader.hasNext())){
+        System.out.println("[ERROR]: Shader konnte nicht geladen werden");
+        return;
+      }
+
+      myProgram = glCreateProgram();
+
+      int shaderObjectV = glCreateShader(GL_VERTEX_SHADER);
+      int shaderObjectF = glCreateShader(GL_FRAGMENT_SHADER);
+
+      glShaderSource(shaderObjectV,vertShaderReader.next());
+      glCompileShader(shaderObjectV);
+      System.out.println("[INFO] [VERT SHADER]\n: " + glGetShaderInfoLog(shaderObjectV, 1024));
+      glAttachShader(myProgram, shaderObjectV);
+
+      glShaderSource(shaderObjectF,fragShadeRreader.next());
+      glCompileShader(shaderObjectF);
+      System.out.println("[INFO] [FRAG SHADER]:\n" + glGetShaderInfoLog(shaderObjectF, 1024));
+      glAttachShader(myProgram, shaderObjectF);
+
+      glLinkProgram(myProgram);
+      glUseProgram(myProgram);
+
+      int pixelStep = glGetUniformLocation(myProgram,"step");
+
+      glUniform2f(pixelStep,1/WIDTH,1/HEIGHT);
+
+
+
+    } catch (FileNotFoundException e) {
+      System.out.println("[ERROR] next line:\n");
+      e.printStackTrace();
+    }
   }
 
   private void erzeugeBlaetter(int anz) {
@@ -107,7 +159,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
   @Override
   public void renderLoop() {
 
-
+    prepareShader();
     // Haupt-loop. Solange die UserIn das Fenster nicht schließen möchte, fahre mit der Game-loop
     // fort.
     while (!Display.isCloseRequested()) {
@@ -124,8 +176,10 @@ public class AutumnSimulator extends LWJGLBasisFenster {
 
       glMatrixMode(GL_PROJECTION);
       glLoadIdentity();
-      glOrtho(0, WIDTH, HEIGHT, 0, -0, 1000);
+      glOrtho(0, WIDTH, HEIGHT, 0, 0, 10);
       glMatrixMode(GL_MODELVIEW);
+
+
 
 
 
@@ -140,6 +194,12 @@ public class AutumnSimulator extends LWJGLBasisFenster {
         objekt.render();
       }
 
+      //Übergebe Tageszeit an Shader
+      int shaderTime = glGetUniformLocation(myProgram,"u_Time");
+      if (shaderTime != -1){
+        glUniform1f(shaderTime, DayTimer.calcDayTime());
+
+      }
       Display.update();
     }
   }
