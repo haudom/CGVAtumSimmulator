@@ -75,8 +75,8 @@ public class AutumnSimulator extends LWJGLBasisFenster {
     objekte.add(new Baum());
     // Render Laubgebläse zum Schluss
     objekte.add(laubgeblaese);
-
   }
+
   private void prepareShader(){
     File vertexShader = new File("shader/shader.vert");
     File fragmentShader = new File("shader/shader.frag");
@@ -100,7 +100,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
 
       glShaderSource(shaderObjectV,vertShaderReader.next());
       glCompileShader(shaderObjectV);
-      System.out.println("[INFO] [VERT SHADER]\n: " + glGetShaderInfoLog(shaderObjectV, 1024));
+      System.out.println("[INFO] [VERT SHADER]:\n " + glGetShaderInfoLog(shaderObjectV, 1024));
       glAttachShader(myProgram, shaderObjectV);
 
       glShaderSource(shaderObjectF,fragShaderReader.next());
@@ -127,7 +127,9 @@ public class AutumnSimulator extends LWJGLBasisFenster {
       objekte.add(new Blatt(
           laubgeblaese,
           wind,
+          // Zufällige Position
           new Vektor3D(rand.nextInt(WIDTH), rand.nextInt(HEIGHT), 0),
+          // Zufällige Startgeschwindigkeit
           new Vektor3D(rand.nextFloat() * 5 - 2.5, rand.nextFloat() - 0.5, 0)
       ));
     }
@@ -167,19 +169,19 @@ public class AutumnSimulator extends LWJGLBasisFenster {
       glOrtho(0, WIDTH, HEIGHT, 0, 0, 10);
       glMatrixMode(GL_MODELVIEW);
 
-      for (BasisObjekt objekt : objekte) {
-        wind.update(diff);
+      wind.update(diff);
 
+      for (BasisObjekt objekt : objekte) {
         objekt.update(diff);
         objekt.render();
       }
 
-      //Übergebe Tageszeit an Shader
+      // Übergebe Tageszeit an Shader
       int shaderTime = glGetUniformLocation(myProgram,"u_Time");
       if (shaderTime != -1){
         glUniform1f(shaderTime, DayTimer.calcDayTime());
-
       }
+
       Display.update();
     }
   }

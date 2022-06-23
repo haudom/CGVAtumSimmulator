@@ -106,7 +106,7 @@ public class Blatt extends BasisObjekt {
   }
 
   private void calcRelativeWindSpeed() {
-    //addGlobalWindSpeed();
+    addGlobalWindSpeed();
     addBlaeserWindSpeed();
     leafWindSpeed.sub(speed);
   }
