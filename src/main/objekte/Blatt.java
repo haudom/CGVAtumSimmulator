@@ -15,15 +15,22 @@ import org.lwjgl.opengl.Display;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Blatt extends BasisObjekt {
-  private final double PPM = 200; // Pixel per Meter
-  private Vektor3D leafWindSpeed = new Vektor3D();
-
-
-  // Liste an Blatttexturen
+  // Liste der Blattfarben
   static private float[][] colors = {
       {0.875f, 0.324f, 0.051f},
       {0.965f, 0.699f, 0.1328f},
   };
+  static private Model model;
+  static {
+    try {
+      model = POGL.loadModel(new File("./objects/Blatt.obj"));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private final double PPM = 200; // Pixel per Meter
+  private Vektor3D leafWindSpeed = new Vektor3D();
 
   // Laubgebläse Instanz von der die Parameter für die Physik abgelesen werden
   public Laubgeblaese laubgeblaese;
@@ -32,7 +39,6 @@ public class Blatt extends BasisObjekt {
   public double mass = 0.001; // gewicht in kg
   public double size = 0.0004; // Größe in m²
   private double rotationSensitivity = 1; //Stärke, mit der das Blatt auf eine Kraft mit einer Rotatin reagiert
-  Model model;
 
   public float[] color;
 
@@ -53,12 +59,6 @@ public class Blatt extends BasisObjekt {
         NumberUtil.lerp(colors[0][1], colors[1][1], randomValue),
         NumberUtil.lerp(colors[0][2], colors[1][2], randomValue),
     };
-
-    try {
-      model = POGL.loadModel(new File("./objects/Blatt.obj"));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   @Override
