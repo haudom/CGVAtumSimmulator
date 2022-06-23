@@ -28,7 +28,7 @@ public class Sun extends BasisObjekt implements Updatebar {
   @Override
   public void update(double time) {
     float dayTime = DayTimer.calcDayTime();
-    position.x = HEIGHT * 2 * Math.sin(2 * Math.PI * dayTime);
+    position.x = HEIGHT * 2 * -Math.sin(2 * Math.PI * dayTime);
     position.y = HEIGHT * 2 * Math.cos(2 * Math.PI * dayTime);
   }
 }
