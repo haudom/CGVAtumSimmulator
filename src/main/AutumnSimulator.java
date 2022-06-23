@@ -42,7 +42,8 @@ public class AutumnSimulator extends LWJGLBasisFenster {
     f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     Canvas c = new Canvas();
     f.add(c);
-    f.setBounds(0, 0, width, height);
+    f.setSize(new Dimension(width, height));
+    f.setResizable(false);
     f.setLocationRelativeTo(null);
 
     Object[] options = {"OBJ Datei", "OpenGL"};
