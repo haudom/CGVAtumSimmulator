@@ -11,12 +11,11 @@ import main.utility.SimplexNoise;
  * main.Wind zu simulieren.
  */
 public class Wind implements Updatebar {
-  private Vektor3D position = new Vektor3D();
+  private Vektor3D noisePosition = new Vektor3D();
 
   public Vektor3D velocity;
   public Vektor3D minWind;
   public Vektor3D maxWind;
-
 
   /**
    * @param minWind Die mindeste Windstärke
@@ -34,13 +33,13 @@ public class Wind implements Updatebar {
         NumberUtil.lerp(
             minWind.x,
             maxWind.y,
-            SimplexNoise.noise(position.x, position.y, position.z)
+            SimplexNoise.noise(noisePosition.x, noisePosition.y, noisePosition.z)
         ),
         0,
         0
     );
 
-    position.add(new Vektor3D(
+    noisePosition.add(new Vektor3D(
         time * 0.002,
         time * 0.002,
         time * 0.002

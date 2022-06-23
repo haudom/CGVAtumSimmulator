@@ -36,7 +36,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
 
   public AutumnSimulator(String title, int width, int height) {
     super(title, width, height);
-    int userOBJorGL;
+
     JFrame f = new JFrame();
     f.setTitle(title);
     f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -44,10 +44,9 @@ public class AutumnSimulator extends LWJGLBasisFenster {
     f.add(c);
     f.setBounds(0, 0, width, height);
     f.setLocationRelativeTo(null);
-    Object[] options = {"OBJ Datei",
-            "OpenGL"};
 
-    userOBJorGL = JOptionPane.showOptionDialog(f,"Blatt Lademethode","Autumn Simulator",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null,options,options[0]);
+    Object[] options = {"OBJ Datei", "OpenGL"};
+    int userOBJorGL = JOptionPane.showOptionDialog(f,"Blatt Lademethode","Autumn Simulator",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null,options,options[0]);
     System.out.println(userOBJorGL);
     if (userOBJorGL < 0){
       exit(0);
@@ -82,13 +81,13 @@ public class AutumnSimulator extends LWJGLBasisFenster {
     File fragmentShader = new File("shader/shader.frag");
 
     try {
-      Scanner fragShadeRreader = new Scanner(fragmentShader);
+      Scanner fragShaderReader = new Scanner(fragmentShader);
       Scanner vertShaderReader = new Scanner(vertexShader);
 
       vertShaderReader.useDelimiter("\\Z");
-      fragShadeRreader.useDelimiter("\\Z");
+      fragShaderReader.useDelimiter("\\Z");
 
-      if (!(vertShaderReader.hasNext()&&fragShadeRreader.hasNext())){
+      if (!(vertShaderReader.hasNext() && fragShaderReader.hasNext())){
         System.out.println("[ERROR]: Shader konnte nicht geladen werden");
         return;
       }
@@ -103,7 +102,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
       System.out.println("[INFO] [VERT SHADER]\n: " + glGetShaderInfoLog(shaderObjectV, 1024));
       glAttachShader(myProgram, shaderObjectV);
 
-      glShaderSource(shaderObjectF,fragShadeRreader.next());
+      glShaderSource(shaderObjectF,fragShaderReader.next());
       glCompileShader(shaderObjectF);
       System.out.println("[INFO] [FRAG SHADER]:\n" + glGetShaderInfoLog(shaderObjectF, 1024));
       glAttachShader(myProgram, shaderObjectF);
@@ -113,10 +112,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
 
       int pixelStep = glGetUniformLocation(myProgram,"u_ScreenSize");
 
-      glUniform2f(pixelStep,WIDTH,HEIGHT);
-
-
-
+      glUniform2f(pixelStep, WIDTH, HEIGHT);
     } catch (FileNotFoundException e) {
       System.out.println("[ERROR] next line:\n");
       e.printStackTrace();
@@ -151,8 +147,6 @@ public class AutumnSimulator extends LWJGLBasisFenster {
 
   @Override
   public void renderLoop() {
-
-
     // Haupt-loop. Solange die UserIn das Fenster nicht schließen möchte, fahre mit der Game-loop
     // fort.
     while (!Display.isCloseRequested()) {
@@ -171,14 +165,6 @@ public class AutumnSimulator extends LWJGLBasisFenster {
       glLoadIdentity();
       glOrtho(0, WIDTH, HEIGHT, 0, 0, 10);
       glMatrixMode(GL_MODELVIEW);
-
-
-
-
-
-
-
-
 
       for (BasisObjekt objekt : objekte) {
         wind.update(diff);

@@ -4,21 +4,19 @@ import kapitel01.POGL;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class Background extends BasisObjekt{
-    private final int WIDTH, HEIGHT;
-    public Background(int width, int height){
+public class Background extends BasisObjekt {
+  private final int WIDTH, HEIGHT;
 
-        WIDTH = width;
-        HEIGHT = height;
-    }
-    @Override
-    public void render() {
+  public Background(int width, int height) {
+    WIDTH = width;
+    HEIGHT = height;
+  }
 
-        glColor3d(0.5,0.2,0);
-        glLoadIdentity();
-        glTranslated(WIDTH/2d,HEIGHT/2d,0);
-        POGL.renderViereck(WIDTH,HEIGHT, -10);
-
-
-    }
+  @Override
+  public void render() {
+    glColor3d(0.5, 0.2, 0);
+    glLoadIdentity();
+    glTranslated((double) WIDTH / 2, (double) HEIGHT / 2, 0);
+    POGL.renderViereck(WIDTH, HEIGHT, -10);
+  }
 }

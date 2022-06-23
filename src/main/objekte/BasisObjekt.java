@@ -9,10 +9,6 @@ public abstract class BasisObjekt implements Updatebar {
    public Vektor3D position;
    public Vektor3D speed;
 
-
-
-
-   
    public BasisObjekt() {
       this(new Vektor3D(0,0, 0));
    }

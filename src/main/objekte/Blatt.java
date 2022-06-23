@@ -9,14 +9,13 @@ import kapitel01.POGL;
 import kapitel04.Vektor3D;
 import main.Wind;
 import main.utility.NumberUtil;
-import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 
 import static org.lwjgl.opengl.GL11.*;
 
 public class Blatt extends BasisObjekt {
   // Liste der Blattfarben
-  static private float[][] colors = {
+  static private final float[][] colors = {
       {0.875f, 0.324f, 0.051f},
       {0.965f, 0.699f, 0.1328f},
   };
@@ -36,9 +35,9 @@ public class Blatt extends BasisObjekt {
   public Laubgeblaese laubgeblaese;
   public Wind wind;
 
-  public double mass = 0.001; // gewicht in kg
+  public double mass = 0.001; // Gewicht in kg
   public double size = 0.0004; // Größe in m²
-  private double rotationSensitivity = 1; //Stärke, mit der das Blatt auf eine Kraft mit einer Rotatin reagiert
+  private double rotationSensitivity = 1; // Stärke, mit der das Blatt auf eine Kraft mit einer Rotation reagiert
 
   public float[] color;
 
@@ -65,14 +64,13 @@ public class Blatt extends BasisObjekt {
   public void render() {
     glLoadIdentity();
 
-      glTranslated(position.x, position.y, position.z );
+    glTranslated(position.x, position.y, position.z);
 
-      glColor4f(color[0], color[1], color[2], 1.0f);
+    glColor4f(color[0], color[1], color[2], 1.0f);
 
-      glScaled(10,10,10);
-      glRotated(90,0.4,1,0);
+    glScaled(10, 10, 10);
+    glRotated(90, 0.4, 1, 0);
 
-    //POGL.renderViereck(10, 10);
     POGL.renderObject(model);
   }
 
@@ -80,20 +78,13 @@ public class Blatt extends BasisObjekt {
     return Display.getDisplayMode().getHeight() * 0.9;
   }
 
-  public double getReibung() {
-    double BOTTOM = getBottom();
-
-    // Wenn Blätter am Boden liegen, sollten sie schwerer zu bewegen sein
-    return Math.max(0.0, position.y - (BOTTOM * 0.9)) / (BOTTOM * 0.1);
-  }
-
   public void applyGravity(double time) {
     double BOTTOM = getBottom();
-     // TODO GL-Einheiten auf Meter anpassen? Ne zu aufwändig
+    // TODO GL-Einheiten auf Meter anpassen? Ne zu aufwändig
 
     double g = 9.81;
     // xf = x0 + v0 * t + 0.5 * g * t * t;
-    Vektor3D gravity = new Vektor3D(0.0, g * time , 0.0);
+    Vektor3D gravity = new Vektor3D(0.0, g * time, 0.0);
 
     this.speed.add(gravity);
 
@@ -102,8 +93,8 @@ public class Blatt extends BasisObjekt {
     }
   }
 
-  public void addBlaserWindSpeed() {
-    Vektor3D blaeser = new Vektor3D(laubgeblaese.getForceAt(position));
+  public void addBlaeserWindSpeed() {
+    Vektor3D blaeser = new Vektor3D(laubgeblaese.getVelocityAt(position));
 //    System.out.println("bläser: " + blaeser);
     leafWindSpeed.add(blaeser);
   }
@@ -111,47 +102,39 @@ public class Blatt extends BasisObjekt {
   private void addGlobalWindSpeed() {
     Vektor3D windAcceleration = new Vektor3D(wind.velocity);
 
-    //double t = 1.0 - Math.pow(position.y / getBottom(), 2);
-    //windAcceleration.mult(t);
-
-    //TODO
-
     leafWindSpeed.add(windAcceleration);
   }
-  private void calcRelativeWindSpeed(){
+
+  private void calcRelativeWindSpeed() {
     //addGlobalWindSpeed();
-    addBlaserWindSpeed();
+    addBlaeserWindSpeed();
     leafWindSpeed.sub(speed);
   }
 
-  private void applyAirResistance(double time){
-    final double Luftdruck = 1.204;
+  private void applyAirResistance(double time) {
+    final double luftdruck = 1.204;
     final double cw = 1;
-    Vektor3D luftwiederstandbeschläunigung;
     double winkelLuftBlatt =
-            Math.acos(
-                    (leafWindSpeed.x * rotation.x) + (leafWindSpeed.y * rotation.y) + (leafWindSpeed.z * rotation.z)
-                    / (leafWindSpeed.length() * rotation.length())
-            );
-    double strinFläche = size * Math.sin(winkelLuftBlatt);
+        Math.acos(
+            (leafWindSpeed.x * rotation.x) + (leafWindSpeed.y * rotation.y)
+                + (leafWindSpeed.z * rotation.z)
+                / (leafWindSpeed.length() * rotation.length())
+        );
+    double stirnFlaeche = size * Math.sin(winkelLuftBlatt);
 
-    luftwiederstandbeschläunigung = new Vektor3D(leafWindSpeed);
-    luftwiederstandbeschläunigung.x *= luftwiederstandbeschläunigung.x;
-    luftwiederstandbeschläunigung.y *= luftwiederstandbeschläunigung.y;
-    luftwiederstandbeschläunigung.z *= luftwiederstandbeschläunigung.z;
+    Vektor3D luftwiderstandBeschleunigung = new Vektor3D(leafWindSpeed);
+    luftwiderstandBeschleunigung.x *= luftwiderstandBeschleunigung.x;
+    luftwiderstandBeschleunigung.y *= luftwiderstandBeschleunigung.y;
+    luftwiderstandBeschleunigung.z *= luftwiderstandBeschleunigung.z;
 
-    luftwiederstandbeschläunigung.mult(Luftdruck*strinFläche*time*1/mass);
+    luftwiderstandBeschleunigung.mult(luftdruck * stirnFlaeche * time * 1 / mass);
 
-    luftwiederstandbeschläunigung.x *= Math.signum(leafWindSpeed.x);
-    luftwiederstandbeschläunigung.y *= Math.signum(leafWindSpeed.y);
-    luftwiederstandbeschläunigung.z *= Math.signum(leafWindSpeed.z);
+    luftwiderstandBeschleunigung.x *= Math.signum(leafWindSpeed.x);
+    luftwiderstandBeschleunigung.y *= Math.signum(leafWindSpeed.y);
+    luftwiderstandBeschleunigung.z *= Math.signum(leafWindSpeed.z);
 
-    speed.add(luftwiederstandbeschläunigung);
-
-
+    speed.add(luftwiderstandBeschleunigung);
   }
-
-
 
   @Override
   public void update(double time) {
@@ -159,8 +142,6 @@ public class Blatt extends BasisObjekt {
     double BOTTOM = getBottom();
 
     leafWindSpeed.mult(0);
-
-
 
     calcRelativeWindSpeed();
     applyAirResistance(time);
@@ -170,17 +151,23 @@ public class Blatt extends BasisObjekt {
     distance.mult(time);
 
     position.add(distance);
-//    System.out.println("Speed:" + speed);
-//    System.out.println("pos: " + position);
-//    System.out.println("windSpeed: " + leafWindSpeed );
+    // System.out.println("Speed:" + speed);
+    // System.out.println("pos: " + position);
+    // System.out.println("windSpeed: " + leafWindSpeed);
 
     /* ******* ÜBERPRÜFE BILDRÄNDER ****** */
 
     int PADDING = 100;
 
     // Überprüfe, ob Blatt über die Bildränder hinausgehen würde
-    if (position.x < -PADDING) position.setX(WIDTH + position.x + 2*PADDING);
-    if (position.x > WIDTH + PADDING) position.setX(position.x - WIDTH - 2*PADDING);
-    if (position.y > BOTTOM) position.setY(BOTTOM);
+    if (position.x < -PADDING) {
+      position.setX(WIDTH + position.x + 2 * PADDING);
+    }
+    if (position.x > WIDTH + PADDING) {
+      position.setX(position.x - WIDTH - 2 * PADDING);
+    }
+    if (position.y > BOTTOM) {
+      position.setY(BOTTOM);
+    }
   }
 }
