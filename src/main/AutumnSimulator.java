@@ -2,13 +2,10 @@ package main;
 
 import static java.lang.System.exit;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
@@ -19,7 +16,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.Timer;
 import java.util.concurrent.ThreadLocalRandom;
 
 import kapitel04.Vektor3D;
@@ -28,12 +24,8 @@ import main.utility.DayTimer;
 import org.lwjgl.opengl.Display;
 
 import javax.swing.*;
-import javax.swing.text.html.Option;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.glTranslated;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL40.glUniform1d;
 
 public class AutumnSimulator extends LWJGLBasisFenster {
   private Wind wind;
@@ -74,9 +66,10 @@ public class AutumnSimulator extends LWJGLBasisFenster {
         100,
         0.5
     );
+    prepareShader();
 
     // Render erst die Blätter
-    objekte.add(new Sun(myProgram));
+    objekte.add(new Sun(myProgram, width, height));
     objekte.add(new Background(WIDTH,HEIGHT));
     erzeugeBlaetter(100);
     objekte.add(new Baum());
@@ -118,9 +111,9 @@ public class AutumnSimulator extends LWJGLBasisFenster {
       glLinkProgram(myProgram);
       glUseProgram(myProgram);
 
-      int pixelStep = glGetUniformLocation(myProgram,"step");
+      int pixelStep = glGetUniformLocation(myProgram,"u_ScreenSize");
 
-      glUniform2f(pixelStep,1/WIDTH,1/HEIGHT);
+      glUniform2f(pixelStep,WIDTH,HEIGHT);
 
 
 
@@ -159,7 +152,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
   @Override
   public void renderLoop() {
 
-    prepareShader();
+
     // Haupt-loop. Solange die UserIn das Fenster nicht schließen möchte, fahre mit der Game-loop
     // fort.
     while (!Display.isCloseRequested()) {
