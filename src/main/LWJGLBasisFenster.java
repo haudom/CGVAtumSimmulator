@@ -13,45 +13,46 @@ import java.awt.*;
  * ausführen und start() auf den renderLoop() und das Abmelden reduzieren.
  */
 public abstract class LWJGLBasisFenster {
-   public int WIDTH, HEIGHT;
-   public String TITLE;
 
-   public LWJGLBasisFenster(String title, int width, int height) {
-      WIDTH = width;
-      HEIGHT = height;
-      TITLE = title;
+  public int width, height;
+  public String title;
 
-   }
+  public LWJGLBasisFenster(String title, int width, int height) {
+    this.width = width;
+    this.height = height;
+    this.title = title;
+  }
 
-   public void initDisplay() {
-      try {
-         Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
-         Display.setTitle(TITLE);
-         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-         Display.setLocation((d.width-WIDTH)/2, (d.height-HEIGHT)/2);
-         Display.create();
-      } catch (LWJGLException e) {
-         e.printStackTrace();
-      }
-   }
-   public void initDisplay(Canvas c) {
-      try {
-         Display.setParent(c);
-         Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
-         Display.setTitle(TITLE);
-         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-         Display.setLocation((d.width-WIDTH)/2, (d.height-HEIGHT)/2);
-         Display.create();
-      } catch (LWJGLException e) {
-         e.printStackTrace();
-      }
-   }
+  public void initDisplay() {
+    try {
+      Display.setDisplayMode(new DisplayMode(width, height));
+      Display.setTitle(title);
+      Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+      Display.setLocation((d.width - width) / 2, (d.height - height) / 2);
+      Display.create();
+    } catch (LWJGLException e) {
+      e.printStackTrace();
+    }
+  }
 
-   public abstract void renderLoop();
+  public void initDisplay(Canvas c) {
+    try {
+      Display.setParent(c);
+      Display.setDisplayMode(new DisplayMode(width, height));
+      Display.setTitle(title);
+      Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+      Display.setLocation((d.width - width) / 2, (d.height - height) / 2);
+      Display.create();
+    } catch (LWJGLException e) {
+      e.printStackTrace();
+    }
+  }
 
-   public void start() {
-      renderLoop();
-      Display.destroy();
-      System.exit(0);
-   }
+  public abstract void renderLoop();
+
+  public void start() {
+    renderLoop();
+    Display.destroy();
+    System.exit(0);
+  }
 }

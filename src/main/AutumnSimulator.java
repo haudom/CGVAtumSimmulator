@@ -70,8 +70,8 @@ public class AutumnSimulator extends LWJGLBasisFenster {
 
     // Render erst die Blätter
     objekte.add(new Sun(myProgram, width, height));
-    objekte.add(new Background(WIDTH,HEIGHT));
-    erzeugeBlaetter(200);
+    objekte.add(new Background(width, height));
+    erzeugeBlaetter(100);
     objekte.add(new Baum());
     // Render Laubgebläse zum Schluss
     objekte.add(laubgeblaese);
@@ -117,7 +117,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
 
       int pixelStep = glGetUniformLocation(myProgram,"u_ScreenSize");
 
-      glUniform2f(pixelStep, WIDTH, HEIGHT);
+      glUniform2f(pixelStep, width, height);
     } catch (FileNotFoundException e) {
       System.out.println("[ERROR] next line:\n");
       e.printStackTrace();
@@ -132,7 +132,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
           laubgeblaese,
           wind,
           // Zufällige Position
-          new Vektor3D(rand.nextInt(WIDTH), rand.nextInt(HEIGHT), 0),
+          new Vektor3D(rand.nextInt(width), rand.nextInt(height), 0),
           // Zufällige Startgeschwindigkeit
           new Vektor3D(rand.nextFloat() * 1 - 0.5, rand.nextFloat() * 0.5 - 0.25, 0)
       ));
@@ -170,7 +170,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
 
       glMatrixMode(GL_PROJECTION);
       glLoadIdentity();
-      glOrtho(0, WIDTH, HEIGHT, 0, 0, 10);
+      glOrtho(0, width, height, 0, 0, 10);
       glMatrixMode(GL_MODELVIEW);
 
       wind.update(diff);
