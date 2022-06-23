@@ -130,9 +130,11 @@ public class POGL {
 					vertexIndices = new Vector3f(Float.valueOf(lineElements[1].split("/")[0]),
 							Float.valueOf(lineElements[2].split("/")[0]),
 							Float.valueOf(lineElements[3].split("/")[0]));
-					texCoordsIndices = new Vector3f(Float.valueOf(line.split(" ")[1].split("/")[1]),
-							Float.valueOf(lineElements[2].split("/")[1]),
-							Float.valueOf(lineElements[3].split("/")[1]));
+					if (line.split(" ")[1].split("/")[1] != "") { // format "f v1//vn1 v2//vn2 v3//vn3"
+						texCoordsIndices = new Vector3f(Float.valueOf(line.split(" ")[1].split("/")[1]),
+								Float.valueOf(lineElements[2].split("/")[1]),
+								Float.valueOf(lineElements[3].split("/")[1]));
+					}
 					if (lineElements[1].split("/").length == 3) {
 						normalIndices = new Vector3f(Float.valueOf(lineElements[1].split("/")[2]),
 								Float.valueOf(lineElements[2].split("/")[2]),

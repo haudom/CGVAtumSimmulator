@@ -73,7 +73,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
     // Render erst die Blätter
     objekte.add(new Sun(myProgram, width, height));
     objekte.add(new Background(width, height));
-    erzeugeBlaetter(100);
+    erzeugeBlaetter(300);
     objekte.add(new Baum());
     // Render Laubgebläse zum Schluss
     objekte.add(laubgeblaese);
