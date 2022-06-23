@@ -38,7 +38,6 @@ public class Blatt extends BasisObjekt {
 
   public double mass = 0.001; // Gewicht in kg
   public double size = 0.0004; // Größe in m²
-  private double rotationSensitivity = 1; // Stärke, mit der das Blatt auf eine Kraft mit einer Rotation reagiert
 
   public float[] color;
 
@@ -48,9 +47,6 @@ public class Blatt extends BasisObjekt {
     this.wind = wind;
     this.laubgeblaese = laubgeblaese;
     this.speed = velocity;
-    rotation.x = 0;
-    rotation.y = 0;
-    rotation.z = 0;
 
     // Generiere eine zufällige Farbe, die zwischen den Rot- und Orange-Werten in Blatt.colors liegt
     float randomValue = ThreadLocalRandom.current().nextFloat();
@@ -93,7 +89,7 @@ public class Blatt extends BasisObjekt {
 
   public Vektor3D getBlaeserWindSpeed() {
     Vektor3D blaeserSpeed = laubgeblaese.getSpeedAt(position);
-    // System.out.println("bläser: " + blaeserSpeed);
+
     return blaeserSpeed;
   }
 
@@ -101,6 +97,28 @@ public class Blatt extends BasisObjekt {
     Vektor3D windSpeed = new Vektor3D(wind.velocity);
 
     return windSpeed;
+  }
+
+  public double calcWinkelToLuft(Vektor3D wind) {
+    wind = new Vektor3D(wind);
+
+    // Ein Vektor, der von der Fläche des Blattes ausgeht
+    Vektor3D blattFlaecheVektor = new Vektor3D(0, 1, 0);
+    blattFlaecheVektor = VektorUtil.rotateVektor(blattFlaecheVektor, new Vektor3D(1, 0, 0), rotation.x);
+    blattFlaecheVektor = VektorUtil.rotateVektor(blattFlaecheVektor, new Vektor3D(0, 1, 0), rotation.y);
+    blattFlaecheVektor = VektorUtil.rotateVektor(blattFlaecheVektor, new Vektor3D(0, 0, 1), rotation.z);
+    blattFlaecheVektor.normalize();
+
+    wind.normalize();
+
+    double dotProdukt = LineareAlgebra.dotProduct(
+        wind,
+        blattFlaecheVektor
+    );
+    double lengthA = wind.length();
+    double lengthB = blattFlaecheVektor.length();
+
+    return Math.acos(dotProdukt / (lengthA * lengthB));
   }
 
   public Vektor3D getWindlast() {
@@ -132,23 +150,7 @@ public class Blatt extends BasisObjekt {
     if (windlast.length() > 0.0001) {
       windlast.mult(p_Luftdichte * c_p);
 
-      // Ein Vektor, der von der Fläche des Blattes ausgeht
-      Vektor3D blattFlaecheVektor = new Vektor3D(0, 1, 0);
-      blattFlaecheVektor = VektorUtil.rotateVektor(blattFlaecheVektor, new Vektor3D(1, 0, 0), rotation.x);
-      blattFlaecheVektor = VektorUtil.rotateVektor(blattFlaecheVektor, new Vektor3D(0, 1, 0), rotation.y);
-      blattFlaecheVektor = VektorUtil.rotateVektor(blattFlaecheVektor, new Vektor3D(0, 0, 1), rotation.z);
-      blattFlaecheVektor.normalize();
-
-      v_RelativeWindgeschwindigkeit.normalize();
-
-      double dotProdukt = LineareAlgebra.dotProduct(
-          v_RelativeWindgeschwindigkeit,
-          blattFlaecheVektor
-      );
-      double lengthA = v_RelativeWindgeschwindigkeit.length();
-      double lengthB = blattFlaecheVektor.length();
-
-      double winkelLuftZuBlatt = Math.acos(dotProdukt / (lengthA * lengthB));
+      double winkelLuftZuBlatt = calcWinkelToLuft(v_RelativeWindgeschwindigkeit);
       double A_Stirnfläche = size * Math.abs(Math.cos(winkelLuftZuBlatt));
 
       windlast.mult(A_Stirnfläche);
