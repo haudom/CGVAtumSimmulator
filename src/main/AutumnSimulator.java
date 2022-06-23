@@ -165,6 +165,8 @@ public class AutumnSimulator extends LWJGLBasisFenster {
       double diff = (now - lastTime) / 1e9;
       lastTime = now;
 
+      System.out.println("fps: " + Math.round(1.0 / diff));
+
       // Zeichne eine Hintergrundfarbe
 
       glClearColor(0.95f, 0.95f, 0.95f, 1.0f);
