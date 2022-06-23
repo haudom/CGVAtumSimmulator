@@ -78,7 +78,7 @@ public class Laubgeblaese extends BasisObjekt {
   /**
    * Berechne die Stärke des Laubgebläses an einer bestimmten Position.
    */
-  public Vektor3D getVelocityAt(Vektor3D blatt) {
+  public Vektor3D getSpeedAt(Vektor3D blatt) {
     int WIDTH = Display.getDisplayMode().getWidth();
 
     // Berechne den Winkel von Bläser zu Blatt

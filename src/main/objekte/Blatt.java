@@ -6,9 +6,11 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import kapitel01.Model;
 import kapitel01.POGL;
+import kapitel04.LineareAlgebra;
 import kapitel04.Vektor3D;
 import main.Wind;
 import main.utility.NumberUtil;
+import main.utility.VektorUtil;
 import org.lwjgl.opengl.Display;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -29,7 +31,6 @@ public class Blatt extends BasisObjekt {
   }
 
   private final double PPM = 200; // Pixel per Meter
-  private Vektor3D leafWindSpeed = new Vektor3D();
 
   // Laubgebläse Instanz von der die Parameter für die Physik abgelesen werden
   public Laubgeblaese laubgeblaese;
@@ -48,7 +49,7 @@ public class Blatt extends BasisObjekt {
     this.laubgeblaese = laubgeblaese;
     this.speed = velocity;
     rotation.x = 0;
-    rotation.y = 1;
+    rotation.y = 0;
     rotation.z = 0;
 
     // Generiere eine zufällige Farbe, die zwischen den Rot- und Orange-Werten in Blatt.colors liegt
@@ -65,11 +66,13 @@ public class Blatt extends BasisObjekt {
     glLoadIdentity();
 
     glTranslated(position.x, position.y, position.z);
+    glScaled(10, 10, 10);
+    glRotated(rotation.x, 1, 0, 0);
+    glRotated(rotation.y, 0, 1, 0);
+    glRotated(rotation.z, 0, 0, 1);
+    glRotated(90, 0.4, 1, 0); // rotations-fix für model
 
     glColor4f(color[0], color[1], color[2], 1.0f);
-
-    glScaled(10, 10, 10);
-    glRotated(90, 0.4, 1, 0);
 
     POGL.renderObject(model);
   }
@@ -78,62 +81,80 @@ public class Blatt extends BasisObjekt {
     return Display.getDisplayMode().getHeight() * 0.9;
   }
 
-  public void applyGravity(double time) {
-    double BOTTOM = getBottom();
+  public Vektor3D getGravityForce(double time) {
     // TODO GL-Einheiten auf Meter anpassen? Ne zu aufwändig
 
     double g = 9.81;
     // xf = x0 + v0 * t + 0.5 * g * t * t;
-    Vektor3D gravity = new Vektor3D(0.0, g * time, 0.0);
+    Vektor3D gravity = new Vektor3D(0.0, 0.5 * g * time, 0.0);
 
-    this.speed.add(gravity);
+    return gravity;
+  }
 
-    if (position.y == BOTTOM) {
-      this.speed.mult(0);
+  public Vektor3D getBlaeserWindSpeed() {
+    Vektor3D blaeserSpeed = laubgeblaese.getSpeedAt(position);
+    // System.out.println("bläser: " + blaeserSpeed);
+    return blaeserSpeed;
+  }
+
+  private Vektor3D getGlobalWindSpeed() {
+    Vektor3D windSpeed = new Vektor3D(wind.velocity);
+
+    return windSpeed;
+  }
+
+  public Vektor3D getWindlast() {
+    Vektor3D v_RelativeWindgeschwindigkeit = new Vektor3D();
+
+    // Addiere alle Windgeschwindigkeiten
+    v_RelativeWindgeschwindigkeit.add(getGlobalWindSpeed());
+    v_RelativeWindgeschwindigkeit.add(getBlaeserWindSpeed());
+
+    // Berechne Windgeschwindigkeit relativ zur Objektgeschwindigkeit
+    v_RelativeWindgeschwindigkeit.sub(speed);
+
+    // p_Luftdichte - Dichte des Mediums (Luft)
+    final double p_Luftdichte = 1.2041; // Bei 20 °C auf Meereshöhe in m³
+    // c_p - Druckbeiwert
+    final double c_p = 1.11;
+
+    // winddruck (in N/m²) = 1/2 * p_Luftdichte * c_p * v_Windgeschwindigkeit ²
+    // windlast (in N)     = A_Stirnfläche * winddruck;
+    Vektor3D windlast = new Vektor3D(0.5, 0.5, 0.5);
+
+    Vektor3D v_RelativeWindgeschwindigkeitQuadrat = new Vektor3D(v_RelativeWindgeschwindigkeit);
+    v_RelativeWindgeschwindigkeitQuadrat.mult(v_RelativeWindgeschwindigkeitQuadrat.length());
+
+    windlast.x *= v_RelativeWindgeschwindigkeitQuadrat.x;
+    windlast.y *= v_RelativeWindgeschwindigkeitQuadrat.y;
+    windlast.z *= v_RelativeWindgeschwindigkeitQuadrat.z;
+
+    if (windlast.length() > 0.0001) {
+      windlast.mult(p_Luftdichte * c_p);
+
+      // Ein Vektor, der von der Fläche des Blattes ausgeht
+      Vektor3D blattFlaecheVektor = new Vektor3D(0, 1, 0);
+      blattFlaecheVektor = VektorUtil.rotateVektor(blattFlaecheVektor, new Vektor3D(1, 0, 0), rotation.x);
+      blattFlaecheVektor = VektorUtil.rotateVektor(blattFlaecheVektor, new Vektor3D(0, 1, 0), rotation.y);
+      blattFlaecheVektor = VektorUtil.rotateVektor(blattFlaecheVektor, new Vektor3D(0, 0, 1), rotation.z);
+      blattFlaecheVektor.normalize();
+
+      v_RelativeWindgeschwindigkeit.normalize();
+
+      double dotProdukt = LineareAlgebra.dotProduct(
+          v_RelativeWindgeschwindigkeit,
+          blattFlaecheVektor
+      );
+      double lengthA = v_RelativeWindgeschwindigkeit.length();
+      double lengthB = blattFlaecheVektor.length();
+
+      double winkelLuftZuBlatt = Math.acos(dotProdukt / (lengthA * lengthB));
+      double A_Stirnfläche = size * Math.abs(Math.cos(winkelLuftZuBlatt));
+
+      windlast.mult(A_Stirnfläche);
     }
-  }
 
-  public void addBlaeserWindSpeed() {
-    Vektor3D blaeser = new Vektor3D(laubgeblaese.getVelocityAt(position));
-//    System.out.println("bläser: " + blaeser);
-    leafWindSpeed.add(blaeser);
-  }
-
-  private void addGlobalWindSpeed() {
-    Vektor3D windAcceleration = new Vektor3D(wind.velocity);
-
-    leafWindSpeed.add(windAcceleration);
-  }
-
-  private void calcRelativeWindSpeed() {
-    addGlobalWindSpeed();
-    addBlaeserWindSpeed();
-    leafWindSpeed.sub(speed);
-  }
-
-  private void applyAirResistance(double time) {
-    final double luftdruck = 1.204;
-    final double cw = 1;
-    double winkelLuftBlatt =
-        Math.acos(
-            (leafWindSpeed.x * rotation.x) + (leafWindSpeed.y * rotation.y)
-                + (leafWindSpeed.z * rotation.z)
-                / (leafWindSpeed.length() * rotation.length())
-        );
-    double stirnFlaeche = size * Math.sin(winkelLuftBlatt);
-
-    Vektor3D luftwiderstandBeschleunigung = new Vektor3D(leafWindSpeed);
-    luftwiderstandBeschleunigung.x *= luftwiderstandBeschleunigung.x;
-    luftwiderstandBeschleunigung.y *= luftwiderstandBeschleunigung.y;
-    luftwiderstandBeschleunigung.z *= luftwiderstandBeschleunigung.z;
-
-    luftwiderstandBeschleunigung.mult(luftdruck * stirnFlaeche * time * 1 / mass);
-
-    luftwiderstandBeschleunigung.x *= Math.signum(leafWindSpeed.x);
-    luftwiderstandBeschleunigung.y *= Math.signum(leafWindSpeed.y);
-    luftwiderstandBeschleunigung.z *= Math.signum(leafWindSpeed.z);
-
-    speed.add(luftwiderstandBeschleunigung);
+    return windlast;
   }
 
   @Override
@@ -141,33 +162,35 @@ public class Blatt extends BasisObjekt {
     int WIDTH = Display.getDisplayMode().getWidth();
     double BOTTOM = getBottom();
 
-    leafWindSpeed.mult(0);
+    // Trage verschiedene Beschleunigungen zusammen
+    Vektor3D acceleration = new Vektor3D();
 
-    calcRelativeWindSpeed();
-    applyAirResistance(time);
-    applyGravity(time);
+    acceleration.add(getWindlast());
+    acceleration.add(getGravityForce(time));
 
+    // Wenn Blatt am Boden liegt, soll sich die Geschwindigkeit auf 0 verringern und keine
+    // horizontale Beschleunigung mehr einwirken
+    if (position.y == BOTTOM) {
+      speed.mult(0);
+      acceleration.setX(0);
+      acceleration.setZ(0);
+    }
+
+    speed.add(acceleration);
+
+    // Berechne die Distanz, die sich das Blatt bewegt hat, bei der Geschwindigkeit (speed) in m/s
     Vektor3D distance = new Vektor3D(speed);
-    distance.mult(time);
+    distance.mult(time * PPM);
 
     position.add(distance);
-    // System.out.println("Speed:" + speed);
-    // System.out.println("pos: " + position);
-    // System.out.println("windSpeed: " + leafWindSpeed);
 
     /* ******* ÜBERPRÜFE BILDRÄNDER ****** */
 
-    int PADDING = 100;
+    int PADDING = 20;
 
     // Überprüfe, ob Blatt über die Bildränder hinausgehen würde
-    if (position.x < -PADDING) {
-      position.setX(WIDTH + position.x + 2 * PADDING);
-    }
-    if (position.x > WIDTH + PADDING) {
-      position.setX(position.x - WIDTH - 2 * PADDING);
-    }
-    if (position.y > BOTTOM) {
-      position.setY(BOTTOM);
-    }
+    if (position.x < -PADDING) position.setX(WIDTH + position.x + 2 * PADDING);
+    if (position.x > WIDTH + PADDING) position.setX(position.x - WIDTH - 2 * PADDING);
+    if (position.y > BOTTOM) position.setY(BOTTOM);
   }
 }

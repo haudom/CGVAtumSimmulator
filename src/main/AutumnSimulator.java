@@ -30,8 +30,8 @@ import static org.lwjgl.opengl.GL20.*;
 public class AutumnSimulator extends LWJGLBasisFenster {
   private Wind wind;
   private Laubgeblaese laubgeblaese;
-  private ArrayList<BasisObjekt> objekte = new ArrayList<BasisObjekt>();
-  private long lastTime = System.nanoTime();
+  private ArrayList<BasisObjekt> objekte = new ArrayList<>();
+  private long lastTime;
   private int myProgram = -1;
 
   public AutumnSimulator(String title, int width, int height) {
@@ -58,11 +58,11 @@ public class AutumnSimulator extends LWJGLBasisFenster {
     initDisplay(c);
 
     wind = new Wind(
-        new Vektor3D(5, -50, 0),
-        new Vektor3D(5000, 40, 0)
+        new Vektor3D(-10, -10, 0),
+        new Vektor3D(30, 5, 0)
     );
     laubgeblaese = new Laubgeblaese(
-        600,
+        70,
         100,
         0.5
     );
@@ -71,10 +71,14 @@ public class AutumnSimulator extends LWJGLBasisFenster {
     // Render erst die Blätter
     objekte.add(new Sun(myProgram, width, height));
     objekte.add(new Background(WIDTH,HEIGHT));
-    erzeugeBlaetter(100);
+    erzeugeBlaetter(200);
     objekte.add(new Baum());
     // Render Laubgebläse zum Schluss
     objekte.add(laubgeblaese);
+
+    // Setze lastTime nach allen anspruchsvollen Operationen, damit Zeitdifferenz nicht riesig ist
+    // beim ersten Frame
+    lastTime = System.nanoTime();
   }
 
   private void prepareShader(){
@@ -130,7 +134,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
           // Zufällige Position
           new Vektor3D(rand.nextInt(WIDTH), rand.nextInt(HEIGHT), 0),
           // Zufällige Startgeschwindigkeit
-          new Vektor3D(rand.nextFloat() * 5 - 2.5, rand.nextFloat() - 0.5, 0)
+          new Vektor3D(rand.nextFloat() * 1 - 0.5, rand.nextFloat() * 0.5 - 0.25, 0)
       ));
     }
   }

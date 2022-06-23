@@ -32,11 +32,19 @@ public class Wind implements Updatebar {
     this.velocity = new Vektor3D(
         NumberUtil.lerp(
             minWind.x,
-            maxWind.y,
+            maxWind.x,
             SimplexNoise.noise(noisePosition.x, noisePosition.y, noisePosition.z)
         ),
-        0,
-        0
+        NumberUtil.lerp(
+            minWind.y,
+            maxWind.y,
+            SimplexNoise.noise(noisePosition.y, noisePosition.z, noisePosition.x)
+        ),
+        NumberUtil.lerp(
+            minWind.z,
+            maxWind.z,
+            SimplexNoise.noise(noisePosition.z, noisePosition.x, noisePosition.y)
+        )
     );
 
     noisePosition.add(new Vektor3D(
