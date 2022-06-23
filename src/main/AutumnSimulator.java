@@ -34,26 +34,28 @@ public class AutumnSimulator extends LWJGLBasisFenster {
   private long lastTime;
   private int myProgram = -1;
 
+  private JFrame frame;
+
   public AutumnSimulator(String title, int width, int height) {
     super(title, width, height);
 
-    JFrame f = new JFrame();
-    f.setTitle(title);
-    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame = new JFrame();
+    frame.setTitle(title);
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     Canvas c = new Canvas();
-    f.add(c);
-    f.setSize(new Dimension(width, height));
-    f.setResizable(false);
-    f.setLocationRelativeTo(null);
+    frame.add(c);
+    frame.setSize(new Dimension(width, height));
+    frame.setResizable(false);
+    frame.setLocationRelativeTo(null);
 
     Object[] options = {"OBJ Datei", "OpenGL"};
-    int userOBJorGL = JOptionPane.showOptionDialog(f,"Blatt Lademethode","Autumn Simulator",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null,options,options[0]);
+    int userOBJorGL = JOptionPane.showOptionDialog(frame,"Blatt Lademethode","Autumn Simulator",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null,options,options[0]);
     System.out.println(userOBJorGL);
     if (userOBJorGL < 0){
       exit(0);
     }
 
-    f.setVisible(true);
+    frame.setVisible(true);
 
     initDisplay(c);
 
