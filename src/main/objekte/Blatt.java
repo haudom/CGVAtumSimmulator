@@ -35,17 +35,19 @@ public class Blatt extends BasisObjekt {
   // Laubgebläse Instanz von der die Parameter für die Physik abgelesen werden
   public Laubgeblaese laubgeblaese;
   public Wind wind;
+  public Boden bottom;
 
   public double mass = 0.001; // Gewicht in kg
   public double size = 0.0004; // Größe in m²
 
   public float[] color;
 
-  public Blatt(Laubgeblaese laubgeblaese, Wind wind, Vektor3D position, Vektor3D velocity) {
+  public Blatt(Laubgeblaese laubgeblaese, Wind wind, Boden bottom, Vektor3D position, Vektor3D velocity) {
     super(position);
 
     this.wind = wind;
     this.laubgeblaese = laubgeblaese;
+    this.bottom = bottom;
     this.speed = velocity;
 
     // Generiere eine zufällige Farbe, die zwischen den Rot- und Orange-Werten in Blatt.colors liegt
@@ -73,8 +75,8 @@ public class Blatt extends BasisObjekt {
     POGL.renderObject(model);
   }
 
-  public double getBottom() {
-    return Display.getDisplayMode().getHeight() * 0.9;
+  public double getBottom(double x) {
+    return Display.getDisplayMode().getHeight() - bottom.getBottomHeight(x);
   }
 
   public Vektor3D getGravityForce(double time) {
@@ -162,7 +164,7 @@ public class Blatt extends BasisObjekt {
   @Override
   public void update(double time) {
     int WIDTH = Display.getDisplayMode().getWidth();
-    double BOTTOM = getBottom();
+    double BOTTOM = getBottom(position.x);
 
     // Trage verschiedene Beschleunigungen zusammen
     Vektor3D acceleration = new Vektor3D();
@@ -172,7 +174,7 @@ public class Blatt extends BasisObjekt {
 
     // Wenn Blatt am Boden liegt, soll sich die Geschwindigkeit auf 0 verringern und keine
     // horizontale Beschleunigung mehr einwirken
-    if (position.y == BOTTOM) {
+    if (position.y >= BOTTOM - 1) {
       speed.mult(0);
       acceleration.setX(0);
       acceleration.setZ(0);

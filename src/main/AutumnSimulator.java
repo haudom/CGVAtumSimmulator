@@ -30,6 +30,7 @@ import static org.lwjgl.opengl.GL20.*;
 public class AutumnSimulator extends LWJGLBasisFenster {
   private Wind wind;
   private Laubgeblaese laubgeblaese;
+  private Boden bottom;
   private ArrayList<BasisObjekt> objekte = new ArrayList<>();
   private long lastTime;
   private int myProgram = -1;
@@ -60,19 +61,21 @@ public class AutumnSimulator extends LWJGLBasisFenster {
     initDisplay(c);
 
     wind = new Wind(
-        new Vektor3D(-10, -10, 0),
-        new Vektor3D(30, 5, 0)
+        new Vektor3D(-10., -5., 0.),
+        new Vektor3D(15., 5., 0.)
     );
     laubgeblaese = new Laubgeblaese(
-        70,
-        100,
+        70.,
+        100.,
         0.5
     );
+    bottom = new Boden(width, height);
     prepareShader();
 
     // Render erst die Blätter
     objekte.add(new Sun(myProgram, width, height));
     objekte.add(new Background(width, height));
+    objekte.add(bottom);
     erzeugeBlaetter(300);
     objekte.add(new Baum());
     // Render Laubgebläse zum Schluss
@@ -133,6 +136,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
       objekte.add(new Blatt(
           laubgeblaese,
           wind,
+          bottom,
           // Zufällige Position
           new Vektor3D(rand.nextInt(width), rand.nextInt(height), 0),
           // Zufällige Startgeschwindigkeit
@@ -174,7 +178,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
 
       glMatrixMode(GL_PROJECTION);
       glLoadIdentity();
-      glOrtho(0, width, height, 0, 0, 10);
+      glOrtho(0, width, height, 0, 0, 100);
       glMatrixMode(GL_MODELVIEW);
 
       wind.update(diff);
