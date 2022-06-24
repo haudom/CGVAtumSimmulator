@@ -45,6 +45,25 @@ public class POGL {
 		glEnd();
 	}
 
+	public static void renderGradient(
+			int width, int height,
+			double topR, double topG, double topB,
+			double botR, double botG, double botB
+	) {
+
+		glBegin(GL_QUADS);
+
+		glColor3d(topR, topG, topB);
+		glVertex3f(0, 0, 0);
+		glVertex3f(width, 0, 0);
+
+		glColor3d(botR, botG, botB);
+		glVertex3f(width, height, 0);
+		glVertex3f(0, height, 0);
+
+		glEnd();
+	}
+
 	public static void renderViereckMitTexturbindung() {
 		glBegin(GL_QUADS);
 		glTexCoord2f(0, 0);

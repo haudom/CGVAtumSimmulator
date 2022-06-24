@@ -14,9 +14,12 @@ public class Background extends BasisObjekt {
 
   @Override
   public void render() {
-    glColor3d(0.5, 0.2, 0);
     glLoadIdentity();
-    glTranslated((double) WIDTH / 2, (double) HEIGHT / 2, 0);
-    POGL.renderViereck(WIDTH, HEIGHT, -10);
+    glTranslated(0, 0, -10);
+    POGL.renderGradient(
+        WIDTH, (int) (HEIGHT * 0.8),
+        84. / 255, 159. / 255, 239. / 255,
+        202. / 255, 235. / 255, 255. / 255
+    );
   }
 }
