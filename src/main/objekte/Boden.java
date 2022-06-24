@@ -37,7 +37,7 @@ public class Boden extends BasisObjekt {
             + Math.sin(x * 0.023 + 230) * 10
             + Math.sin(x * 0.01 - 800) * 15
             + Math.sin(x * 0.0025 - 700) * 40
-            + 390
+            + 310
     );
   }
 
@@ -47,7 +47,7 @@ public class Boden extends BasisObjekt {
             + Math.sin(x * 0.02 + 300) * 10
             + Math.sin(x * 0.008 - 500) * 15
             + Math.sin(x * 0.0035 - 400) * 40
-            + 400
+            + 320
     ) * (float) Math.sqrt(1.0 - x / width * 0.7);
   }
 
@@ -57,7 +57,7 @@ public class Boden extends BasisObjekt {
             + Math.sin(x * 0.015 + 300) * 10
             + Math.sin(x * 0.006 - 500) * 15
             + Math.sin((x - 200) / width * Math.PI * 0.7) * 150
-            + 140
+            + 95
     );
   }
 
@@ -66,7 +66,7 @@ public class Boden extends BasisObjekt {
         Math.sin(x * 0.0356 + 600) * 5
             + Math.sin(x * 0.01 + 100) * 20
             + Math.sin(x * 0.004 - 400) * 30
-            + 150
+            + 140
         );
   }
 
