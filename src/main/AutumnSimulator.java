@@ -104,25 +104,12 @@ public class AutumnSimulator extends LWJGLBasisFenster {
     }
   }
 
-  public void syncFPS() {
-    long now = System.nanoTime();
-    try {
-      Thread.sleep(Math.max(
-          1,
-          // rechne die aktuelle Frame-Differenz in ms aus und zieh sie vom 1000/60 ms Zeitbudget ab
-          (long) (1000 / 60) - (long) ((now - lastTime) / 1e6)
-      ));
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-  }
-
   @Override
   public void renderLoop() {
     // Haupt-loop. Solange die UserIn das Fenster nicht schließen möchte, fahre mit der Game-loop
     // fort.
     while (!Display.isCloseRequested()) {
-      syncFPS();
+      Display.sync(60);
 
       long now = System.nanoTime();
       double diff = (now - lastTime) / 1e9;
