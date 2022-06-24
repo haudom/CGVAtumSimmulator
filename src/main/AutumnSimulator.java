@@ -74,7 +74,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
     bottom = new Boden(width, height);
 
     // Render erst die Blätter
-    // objekte.add(new Sun(width, height));
+    objekte.add(new Sun(width, height));
     objekte.add(new Background(width, height));
     objekte.add(bottom);
     erzeugeBlaetter(300);
