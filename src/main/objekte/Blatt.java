@@ -21,14 +21,7 @@ public class Blatt extends BasisObjekt {
       {0.875f, 0.324f, 0.051f},
       {0.965f, 0.699f, 0.1328f},
   };
-  static private Model model;
-  static {
-    try {
-      model = POGL.loadModel(new File("./objects/Blatt.obj"));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
+  static private Model model = null;
 
   private final double PPM = 200; // Pixel per Meter
 
@@ -36,19 +29,21 @@ public class Blatt extends BasisObjekt {
   public Laubgeblaese laubgeblaese;
   public Wind wind;
   public Boden bottom;
+  public boolean useOBJ;
 
   public double mass = 0.001; // Gewicht in kg
   public double size = 0.0004; // Größe in m²
 
   public float[] color;
 
-  public Blatt(Laubgeblaese laubgeblaese, Wind wind, Boden bottom, Vektor3D position, Vektor3D velocity) {
+  public Blatt(Laubgeblaese laubgeblaese, Wind wind, Boden bottom, Vektor3D position, Vektor3D velocity, boolean useOBJ) {
     super(position);
 
     this.wind = wind;
     this.laubgeblaese = laubgeblaese;
     this.bottom = bottom;
     this.speed = velocity;
+    this.useOBJ = useOBJ;
 
     // Generiere eine zufällige Farbe, die zwischen den Rot- und Orange-Werten in Blatt.colors liegt
     float randomValue = ThreadLocalRandom.current().nextFloat();
@@ -57,6 +52,14 @@ public class Blatt extends BasisObjekt {
         NumberUtil.lerp(colors[0][1], colors[1][1], randomValue),
         NumberUtil.lerp(colors[0][2], colors[1][2], randomValue),
     };
+
+    if (this.useOBJ && model == null) {
+      try {
+        model = POGL.loadModel(new File("./objects/Blatt.obj"));
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   @Override
@@ -72,7 +75,73 @@ public class Blatt extends BasisObjekt {
 
     glColor4f(color[0], color[1], color[2], 1.0f);
 
-    POGL.renderObject(model);
+    if (useOBJ && model != null) {
+      POGL.renderObject(model);
+    } else {
+      // Nutze GL, um Blatt zu modellieren
+      glBegin(GL_TRIANGLES);
+
+      // BLATTFLÄCHE
+      POGL.mirrorXFace(
+          0, -0.640846f, -1.58905f,
+          0, -0.738234f, -1.11924f,
+          0.324593f, -0.777373f, -1.13709f
+      );
+      POGL.mirrorXFace(
+          0, -0.738234f, -1.11924f,
+          0.324593f, -0.777373f, -1.13709f,
+          0, -0.845147f, -0.417682f
+      );
+      POGL.mirrorXFace(
+          0.324593f, -0.777373f, -1.13709f,
+          0, -0.845147f, -0.417682f,
+          1.04153f, -0.985358f, -0.466856f
+      );
+      POGL.mirrorXFace(
+          0, -0.845147f, -0.417682f,
+          1.04153f, -0.985358f, -0.466856f,
+          0, -0.850934f, 0.29147f
+      );
+      POGL.mirrorXFace(
+          1.04153f, -0.985358f, -0.466856f,
+          0, -0.850934f, 0.29147f,
+          0.851437f, -0.962186f, 0.274806f
+      );
+      POGL.mirrorXFace(
+          0, -0.850934f, 0.29147f,
+          0.851437f, -0.962186f, 0.274806f,
+          0, -0.832336f, 0.526535f
+      );
+      POGL.mirrorXFace(
+          0.851437f, -0.962186f, 0.274806f,
+          0, -0.832336f, 0.526535f,
+          0.065162f, -0.836061f, 0.761987f
+      );
+
+      // STIL
+      POGL.mirrorXFace(
+          0, -0.832336f, 0.526535f,
+          0.065162f, -0.836061f, 0.761987f,
+          0, -0.797448f, 0.76154f
+      );
+      POGL.mirrorXFace(
+          0.065162f, -0.836061f, 0.761987f,
+          0, -0.797448f, 0.76154f,
+          0.050795f, -0.653416f, 1.55312f
+      );
+      POGL.mirrorXFace(
+          0, -0.797448f, 0.76154f,
+          0.050795f, -0.653416f, 1.55312f,
+          0, -0.623526f, 1.55224f
+      );
+      POGL.mirrorXFace(
+          0.050795f, -0.653416f, 1.55312f,
+          0, -0.623526f, 1.55224f,
+          0, -0.683123f, 1.5523f
+      );
+
+      glEnd();
+    }
   }
 
   public double getBottom(double x) {

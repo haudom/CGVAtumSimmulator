@@ -22,6 +22,19 @@ public class POGL {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
+	public static void mirrorXFace(
+			float x0, float y0, float z0,
+			float x1, float y1, float z1,
+			float x2, float y2, float z2
+	) {
+		glVertex3f(x0, y0, z0);
+		glVertex3f(x1, y1, z1);
+		glVertex3f(x2, y2, z2);
+		glVertex3f(-x0, y0, z0);
+		glVertex3f(-x1, y1, z1);
+		glVertex3f(-x2, y2, z2);
+	}
+
 	public static void renderKreis(float x, float y, float step, float radius) {
 		glBegin(GL_TRIANGLE_FAN);
 		glVertex2f(x, y);
@@ -162,7 +175,7 @@ public class POGL {
 				} else {
 					// nur drei Vertices f�r ein Dreieck vorhanden
 					vertexIndices = new Vector3f(
-							Float.valueOf(lineElements[1]), 
+							Float.valueOf(lineElements[1]),
 							Float.valueOf(lineElements[2]),
 							Float.valueOf(lineElements[3]));
 				}

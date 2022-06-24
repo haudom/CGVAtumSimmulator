@@ -33,6 +33,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
   private Boden bottom;
   private ArrayList<BasisObjekt> objekte = new ArrayList<>();
   private long lastTime;
+  private boolean useOBJ = false;
 
   private JFrame frame;
 
@@ -49,11 +50,13 @@ public class AutumnSimulator extends LWJGLBasisFenster {
     frame.setLocationRelativeTo(null);
 
     Object[] options = {"OBJ Datei", "OpenGL"};
-    int userOBJorGL = JOptionPane.showOptionDialog(frame,"Blatt Lademethode","Autumn Simulator",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null,options,options[0]);
-    System.out.println(userOBJorGL);
-    if (userOBJorGL < 0){
+    int useOBJorGL = JOptionPane.showOptionDialog(frame,"Blatt Lademethode","Autumn Simulator",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null,options,options[0]);
+    System.out.println(useOBJorGL);
+    if (useOBJorGL < 0){
       exit(0);
     }
+
+    useOBJ = useOBJorGL == 0;
 
     frame.setVisible(true);
 
@@ -71,7 +74,7 @@ public class AutumnSimulator extends LWJGLBasisFenster {
     bottom = new Boden(width, height);
 
     // Render erst die Blätter
-    objekte.add(new Sun(width, height));
+    // objekte.add(new Sun(width, height));
     objekte.add(new Background(width, height));
     objekte.add(bottom);
     erzeugeBlaetter(300);
@@ -95,7 +98,8 @@ public class AutumnSimulator extends LWJGLBasisFenster {
           // Zufällige Position
           new Vektor3D(rand.nextInt(width), rand.nextInt(height), 0),
           // Zufällige Startgeschwindigkeit
-          new Vektor3D(rand.nextFloat() * 1 - 0.5, rand.nextFloat() * 0.5 - 0.25, 0)
+          new Vektor3D(rand.nextFloat() * 1 - 0.5, rand.nextFloat() * 0.5 - 0.25, 0),
+          useOBJ
       ));
     }
   }
