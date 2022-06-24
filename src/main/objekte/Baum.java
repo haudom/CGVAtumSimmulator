@@ -10,7 +10,7 @@ public class Baum extends BasisObjekt {
     glColor3d(0.4,0.17,0.06);
     glLoadIdentity();
     glTranslated(200,500,0);
-    POGL.renderViereck(100,500);
+    POGL.renderViereckCentered(100,500);
 
     glColor3d(244. / 255,159. / 255, 0. / 255);
     glLoadIdentity();

@@ -1,9 +1,13 @@
 package main.objekte;
 
-import static org.lwjgl.opengl.GL11.glColor4f;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLE_FAN;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glColor3d;
+import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslated;
+import static org.lwjgl.opengl.GL11.glVertex2f;
 
 import kapitel01.POGL;
 import kapitel04.LineareAlgebra;
@@ -41,15 +45,35 @@ public class Laubgeblaese extends BasisObjekt {
     return Mouse.isButtonDown(0); // Hole Button-Status für die linke Maustaste
   }
 
+  public void renderKreis(float cx, float cy, float radius, int num_segments) {
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(cx, cy);
+
+    for (int ii = 0; ii < num_segments; ii++)   {
+      float theta = 2.0f * (float) Math.PI * (float) ii / (float) num_segments; //get the current angle
+      float x = radius * (float) Math.cos(theta); //calculate the x component
+      float y = radius * (float) Math.sin(theta); //calculate the y component
+      glVertex2f(x + cx, y + cy);//output vertex
+    }
+
+    glVertex2f(cx + radius, cy);//output vertex
+
+    glEnd();
+  }
+
   @Override
   public void render() {
     glLoadIdentity();
     glTranslated(position.x, position.y, position.z);
     glRotatef((float) rotation.z, 0, 0, 1); // Rotiere um die z-Achse
 
-    glColor4f(0.0f, 1.0f, 1.0f, 1.0f);
+    glColor3d(14. / 255, 19. / 255, 34. / 255);
 
-    POGL.renderViereck(40, 20);
+    POGL.renderViereck(-30, -10, 0, 60, 20);
+
+    glColor3d(86. / 255, 185. / 255, 238. / 255);
+
+    renderKreis(35, -13, 25, 16);
   }
 
   @Override

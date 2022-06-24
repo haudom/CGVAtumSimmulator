@@ -43,10 +43,10 @@ public class POGL {
 		glEnd();
 	}
 
-	public static void renderViereck(int width, int height) {
-		renderViereck(width, height, 0);
+	public static void renderViereckCentered(int width, int height) {
+		renderViereckCentered(width, height, 0);
 	}
-	public static void renderViereck(int width, int height, float z) {
+	public static void renderViereckCentered(int width, int height, float z) {
 		float halfWidth = (float) width / 2;
 		float halfHeight = (float) height / 2;
 
@@ -55,6 +55,14 @@ public class POGL {
 		glVertex3f(halfWidth, -halfHeight, z);
 		glVertex3f(halfWidth, halfHeight, z);
 		glVertex3f(-halfWidth, halfHeight, z);
+		glEnd();
+	}
+	public static void renderViereck(int x, int y, int z, int width, int height) {
+		glBegin(GL_QUADS);
+		glVertex3f(x, y, z);
+		glVertex3f(x + width, y, z);
+		glVertex3f(x + width, y + height, z);
+		glVertex3f(x, y + height, z);
 		glEnd();
 	}
 
