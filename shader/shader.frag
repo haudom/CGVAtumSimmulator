@@ -46,49 +46,49 @@ vec4 getAmbientColor() {
     // Morgendämmerung bis Sonnenaufgang
     else if (u_Time <= 0.15625) {
         float diff = 0.15625 - 0.125;
-        float tmp_t = (t - 0.125) / diff;
+        float tmp_t = (u_Time - 0.125) / diff;
 
         return lerpVec4(nightColor, morningColor, tmp_t);
     }
     // Sonnenaufgang bis Tag
     else if (u_Time <= 0.33) {
         float diff = 0.33 - 0.15625;
-        float tmp_t = (t - 0.15625) / diff;
+        float tmp_t = (u_Time - 0.15625) / diff;
 
         return lerpVec4(morningColor, dayColor, 1.0 - pow(1.0 - tmp_t, 3.));
     }
     // Tag bis Sonnenhöchststand
     else if (u_Time <= 0.5) {
         float diff = 0.5 - 0.33;
-        float tmp_t = (t - 0.33) / diff;
+        float tmp_t = (u_Time - 0.33) / diff;
 
         return lerpVec4(dayColor, dayMidColor, 1.0 - pow(1.0 - tmp_t, 2.));
     }
     // Sonnenhöchststand bis Tag
     else if (u_Time <= 0.67) {
         float diff = 0.67 - 0.5;
-        float tmp_t = (t - 0.5) / diff;
+        float tmp_t = (u_Time - 0.5) / diff;
 
         return lerpVec4(dayMidColor, dayColor, pow(tmp_t, 2.));
     }
     // Tag bis Sonnenuntergang
     else if (u_Time <= 0.84375) {
         float diff = 0.84375 - 0.67;
-        float tmp_t = (t - 0.67) / diff;
+        float tmp_t = (u_Time - 0.67) / diff;
 
         return lerpVec4(dayColor, eveningColor, tmp_t);
     }
     // Sonnenuntergang bis Abenddämmerung
     else if (u_Time <= 0.875) {
         float diff = 0.875 - 0.84375;
-        float tmp_t = (t - 0.84375) / diff;
+        float tmp_t = (u_Time - 0.84375) / diff;
 
         return lerpVec4(eveningColor, nightColor, tmp_t);
     }
     // Abenddämmerung bis Nacht
     else {
         float diff = 1.0 - 0.875;
-        float tmp_t = (t - 0.875) / diff;
+        float tmp_t = (u_Time - 0.875) / diff;
 
         return lerpVec4(nightColor, nightDeepColor, tmp_t);
     }
@@ -112,7 +112,6 @@ void main() {
 //    else {
 //        r = 0.;
 //    }
-
 
     if(u_Time<= 0.25){
         r = - pow(u_Time * 4. ,10.) + 1.;
