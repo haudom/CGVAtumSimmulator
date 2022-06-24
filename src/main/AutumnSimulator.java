@@ -33,7 +33,6 @@ public class AutumnSimulator extends LWJGLBasisFenster {
   private Boden bottom;
   private ArrayList<BasisObjekt> objekte = new ArrayList<>();
   private long lastTime;
-  private int myProgram = -1;
 
   private JFrame frame;
 
@@ -70,10 +69,9 @@ public class AutumnSimulator extends LWJGLBasisFenster {
         0.5
     );
     bottom = new Boden(width, height);
-    prepareShader();
 
     // Render erst die Blätter
-    objekte.add(new Sun(myProgram, width, height));
+    objekte.add(new Sun(width, height));
     objekte.add(new Background(width, height));
     objekte.add(bottom);
     erzeugeBlaetter(300);
@@ -84,49 +82,6 @@ public class AutumnSimulator extends LWJGLBasisFenster {
     // Setze lastTime nach allen anspruchsvollen Operationen, damit Zeitdifferenz nicht riesig ist
     // beim ersten Frame
     lastTime = System.nanoTime();
-  }
-
-  private void prepareShader(){
-    File vertexShader = new File("shader/shader.vert");
-    File fragmentShader = new File("shader/shader.frag");
-
-    try {
-      Scanner fragShaderReader = new Scanner(fragmentShader);
-      Scanner vertShaderReader = new Scanner(vertexShader);
-
-      vertShaderReader.useDelimiter("\\Z");
-      fragShaderReader.useDelimiter("\\Z");
-
-      if (!(vertShaderReader.hasNext() && fragShaderReader.hasNext())){
-        System.out.println("[ERROR]: Shader konnte nicht geladen werden");
-        return;
-      }
-
-      myProgram = glCreateProgram();
-
-      int shaderObjectV = glCreateShader(GL_VERTEX_SHADER);
-      int shaderObjectF = glCreateShader(GL_FRAGMENT_SHADER);
-
-      glShaderSource(shaderObjectV,vertShaderReader.next());
-      glCompileShader(shaderObjectV);
-      System.out.println("[INFO] [VERT SHADER]:\n " + glGetShaderInfoLog(shaderObjectV, 1024));
-      glAttachShader(myProgram, shaderObjectV);
-
-      glShaderSource(shaderObjectF,fragShaderReader.next());
-      glCompileShader(shaderObjectF);
-      System.out.println("[INFO] [FRAG SHADER]:\n" + glGetShaderInfoLog(shaderObjectF, 1024));
-      glAttachShader(myProgram, shaderObjectF);
-
-      glLinkProgram(myProgram);
-      glUseProgram(myProgram);
-
-      int pixelStep = glGetUniformLocation(myProgram,"u_ScreenSize");
-
-      glUniform2f(pixelStep, width, height);
-    } catch (FileNotFoundException e) {
-      System.out.println("[ERROR] next line:\n");
-      e.printStackTrace();
-    }
   }
 
   private void erzeugeBlaetter(int anz) {
@@ -186,12 +141,6 @@ public class AutumnSimulator extends LWJGLBasisFenster {
       for (BasisObjekt objekt : objekte) {
         objekt.update(diff);
         objekt.render();
-      }
-
-      // Übergebe Tageszeit an Shader
-      int shaderTime = glGetUniformLocation(myProgram,"u_Time");
-      if (shaderTime != -1){
-        glUniform1f(shaderTime, DayTimer.calcDayTime());
       }
 
       Display.update();
