@@ -9,6 +9,91 @@ uniform float u_Time;
 uniform vec2 u_ScreenSize;
 uniform vec2 u_SunPos;
 
+// oder mix() nutzen
+float lerp(float v0, float v1, float t) {
+    return v0 + t * (v1 - v0);
+}
+vec4 lerpVec4(vec4 v0, vec4 v1, float t) {
+    return vec4(
+        lerp(v0.x, v1.x, t),
+        lerp(v0.y, v1.y, t),
+        lerp(v0.z, v1.z, t),
+        lerp(v0.w, v1.w, t)
+    );
+}
+
+/*
+Morgendämmerung:	03:00:00 (12.5%)
+Sonnenaufgang:	    03:45:00 (15.625%)
+Sonnenhöchststand:	12:00:00 (50%)
+Sonnenuntergang:	20:15:00 (84.375%)
+Abenddämmerung:	    21:00:00 (87.5%)
+*/
+vec4 getAmbientColor() {
+    // Farben, mit denen die Umgebung multipliziert wird im Verlaufe des Tages
+    vec4 nightColor = vec4(40. / 255, 65. / 255, 178. / 255, 1.);
+    vec4 nightDeepColor = vec4(36. / 255, 55. / 255, 105. / 255, 1.);
+    vec4 morningColor = vec4(212. / 255, 112. / 255, 205. / 255, 1.);
+    vec4 dayColor = vec4(255. / 255, 246. / 255, 214. / 255, 1.);
+    vec4 dayMidColor = vec4(1., 1., 1., 1.);
+    vec4 eveningColor = vec4(233. / 255, 119. / 255, 85. / 255, 1.);
+
+    // Nacht bis Morgendämmerung
+    if (u_Time <= 0.125) {
+        // Länge = 0.125
+        return lerpVec4(nightDeepColor, nightColor, pow(u_Time / 0.125, 2.));
+    }
+    // Morgendämmerung bis Sonnenaufgang
+    else if (u_Time <= 0.15625) {
+        float diff = 0.15625 - 0.125;
+        float tmp_t = (t - 0.125) / diff;
+
+        return lerpVec4(nightColor, morningColor, tmp_t);
+    }
+    // Sonnenaufgang bis Tag
+    else if (u_Time <= 0.33) {
+        float diff = 0.33 - 0.15625;
+        float tmp_t = (t - 0.15625) / diff;
+
+        return lerpVec4(morningColor, dayColor, 1.0 - pow(1.0 - tmp_t, 3.));
+    }
+    // Tag bis Sonnenhöchststand
+    else if (u_Time <= 0.5) {
+        float diff = 0.5 - 0.33;
+        float tmp_t = (t - 0.33) / diff;
+
+        return lerpVec4(dayColor, dayMidColor, 1.0 - pow(1.0 - tmp_t, 2.));
+    }
+    // Sonnenhöchststand bis Tag
+    else if (u_Time <= 0.67) {
+        float diff = 0.67 - 0.5;
+        float tmp_t = (t - 0.5) / diff;
+
+        return lerpVec4(dayMidColor, dayColor, pow(tmp_t, 2.));
+    }
+    // Tag bis Sonnenuntergang
+    else if (u_Time <= 0.84375) {
+        float diff = 0.84375 - 0.67;
+        float tmp_t = (t - 0.67) / diff;
+
+        return lerpVec4(dayColor, eveningColor, tmp_t);
+    }
+    // Sonnenuntergang bis Abenddämmerung
+    else if (u_Time <= 0.875) {
+        float diff = 0.875 - 0.84375;
+        float tmp_t = (t - 0.84375) / diff;
+
+        return lerpVec4(eveningColor, nightColor, tmp_t);
+    }
+    // Abenddämmerung bis Nacht
+    else {
+        float diff = 1.0 - 0.875;
+        float tmp_t = (t - 0.875) / diff;
+
+        return lerpVec4(nightColor, nightDeepColor, tmp_t);
+    }
+}
+
 void main() {
     float r;
     float gb;
