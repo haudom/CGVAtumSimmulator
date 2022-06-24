@@ -63,8 +63,8 @@ public class AutumnSimulator extends LWJGLBasisFenster {
     initDisplay(c);
 
     wind = new Wind(
-        new Vektor3D(-10., -5., 0.),
-        new Vektor3D(15., 5., 0.)
+        new Vektor3D(-5., -5., 0.),
+        new Vektor3D(8., 5., 0.)
     );
     laubgeblaese = new Laubgeblaese(
         70.,
