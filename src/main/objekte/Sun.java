@@ -25,8 +25,8 @@ public class Sun extends BasisObjekt implements Updatebar {
   }
 
   private void prepareShader(){
-    File vertexShader = new File("shader/shader.vert");
-    File fragmentShader = new File("shader/shader.frag");
+    File vertexShader = new File("resources/shader/shader.vert");
+    File fragmentShader = new File("resources/shader/shader.frag");
 
     try {
       Scanner fragShaderReader = new Scanner(fragmentShader);

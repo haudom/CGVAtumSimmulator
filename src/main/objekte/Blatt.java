@@ -55,7 +55,7 @@ public class Blatt extends BasisObjekt {
 
     if (this.useOBJ && model == null) {
       try {
-        model = POGL.loadModel(new File("./objects/Blatt.obj"));
+        model = POGL.loadModel(new File("./resources/objects/Blatt.obj"));
       } catch (IOException e) {
         e.printStackTrace();
       }

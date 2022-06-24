@@ -1,31 +1,18 @@
 package main;
 
 import static java.lang.System.exit;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glOrtho;
+import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.*;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 import kapitel04.Vektor3D;
 import main.objekte.*;
-import main.utility.DayTimer;
 import org.lwjgl.opengl.Display;
 
 import javax.swing.*;
-
-import static org.lwjgl.opengl.GL20.*;
 
 public class AutumnSimulator extends LWJGLBasisFenster {
   private Wind wind;
@@ -50,8 +37,11 @@ public class AutumnSimulator extends LWJGLBasisFenster {
     frame.setLocationRelativeTo(null);
 
     Object[] options = {"OBJ Datei", "OpenGL"};
-    int useOBJorGL = JOptionPane.showOptionDialog(frame,"Blatt Lademethode","Autumn Simulator",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null,options,options[0]);
-    System.out.println(useOBJorGL);
+    int useOBJorGL = JOptionPane.showOptionDialog(
+        frame,"Blatt Lademethode","Autumn Simulator",
+        JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null,
+        options,options[0]
+    );
     if (useOBJorGL < 0){
       exit(0);
     }
