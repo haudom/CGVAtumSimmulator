@@ -46,7 +46,7 @@ public class POGL {
 	}
 
 	public static void renderGradient(
-			int width, int height,
+			int width, int height, float z,
 			double topR, double topG, double topB,
 			double botR, double botG, double botB
 	) {
@@ -54,12 +54,12 @@ public class POGL {
 		glBegin(GL_QUADS);
 
 		glColor3d(topR, topG, topB);
-		glVertex3f(0, 0, 0);
-		glVertex3f(width, 0, 0);
+		glVertex3f(0, 0, z);
+		glVertex3f(width, 0, z);
 
 		glColor3d(botR, botG, botB);
-		glVertex3f(width, height, 0);
-		glVertex3f(0, height, 0);
+		glVertex3f(width, height, z);
+		glVertex3f(0, height, z);
 
 		glEnd();
 	}

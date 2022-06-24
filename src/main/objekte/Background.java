@@ -15,9 +15,9 @@ public class Background extends BasisObjekt {
   @Override
   public void render() {
     glLoadIdentity();
-    glTranslated(0, 0, -10);
+    glTranslated(0, 0, 0);
     POGL.renderGradient(
-        WIDTH, (int) (HEIGHT * 0.8),
+        WIDTH, (int) (HEIGHT * 0.8), -10,
         84. / 255, 159. / 255, 239. / 255,
         202. / 255, 235. / 255, 255. / 255
     );
