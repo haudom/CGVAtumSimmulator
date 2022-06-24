@@ -61,7 +61,9 @@ public class Sun extends BasisObjekt implements Updatebar {
       shaderTime = glGetUniformLocation(shaderProgram,"u_Time");
       shaderPos = glGetUniformLocation(shaderProgram, "u_SunPos");
 
-      glUniform2f(shaderPos, width, height);
+      int shaderScreenSize = glGetUniformLocation(shaderProgram, "u_ScreenSize");
+
+      glUniform2f(shaderScreenSize, width, height);
     } catch (FileNotFoundException e) {
       System.out.println("[ERROR] next line:\n");
       e.printStackTrace();
